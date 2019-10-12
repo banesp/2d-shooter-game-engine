@@ -9,7 +9,7 @@ const unsigned int FRAME_TARGET_TIME = 1000 / FPS;
 
 enum LayerType {
     TILEMAP_LAYER = 0,
-    VEGITATION_LAYER = 1,
+    VEGETATION_LAYER = 1,
     ENEMY_LAYER = 2,
     PLAYER_LAYER = 3,
     PROJECTILE_LAYER = 4,

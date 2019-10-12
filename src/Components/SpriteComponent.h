@@ -23,10 +23,16 @@ class SpriteComponent: public Component {
     public:
         SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
-        SpriteComponent(const char* filePath) {
-            isAnimated = false;
-            isFixed = false;
-            SetTexture(filePath);
+        SpriteComponent(std::string assetTextureId) {
+            this->isAnimated = false;
+            this->isFixed = false;
+            SetTexture(assetTextureId);
+        }
+
+        SpriteComponent(std::string assetTextureId, bool isFixed) {
+            this->isAnimated = false;
+            this->isFixed = isFixed;
+            SetTexture(assetTextureId);
         }
 
         SpriteComponent(std::string id, int numFrames, int animationSpeed, bool hasDirections, bool isFixed) {
@@ -40,12 +46,10 @@ class SpriteComponent: public Component {
                 Animation rightAnimation = Animation(1, numFrames, animationSpeed);
                 Animation leftAnimation = Animation(2, numFrames, animationSpeed);
                 Animation upAnimation = Animation(3, numFrames, animationSpeed);
-
                 animations.emplace("DownAnimation", downAnimation);
                 animations.emplace("RightAnimation", rightAnimation);
                 animations.emplace("LeftAnimation", leftAnimation);
                 animations.emplace("UpAnimation", upAnimation);
-
                 this->animationIndex = 0;
                 this->currentAnimationName = "DownAnimation";
             } else {

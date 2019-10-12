@@ -39,13 +39,13 @@ class Entity {
         }
 
         template <typename T>
-        T* GetComponent() {
-            return static_cast<T*>(componentTypeMap[&typeid(T)]);
+        bool HasComponent() const {
+            return componentTypeMap.count(&typeid(T));
         }
 
         template <typename T>
-        bool HasComponent() const {
-            return componentTypeMap.count(&typeid(T)) > 0;
+        T* GetComponent() {
+            return static_cast<T*>(componentTypeMap[&typeid(T)]);
         }
 };
 

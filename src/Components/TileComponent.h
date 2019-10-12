@@ -1,40 +1,40 @@
-#ifndef TILE_COMPONENT_H
-#define TILE_COMPONENT_H
+#ifndef TILECOMPONENT_H
+#define TILECOMPONENT_H
 
 #include <SDL2/SDL.h>
-#include <glm/glm.hpp>
+#include "../EntityManager.h"
 #include "../AssetManager.h"
-#include "../TextureManager.h"
+#include "../../lib/glm/glm.hpp"
 
 class TileComponent: public Component {
     public:
-        SDL_Texture* texture;
+        SDL_Texture *texture;
         SDL_Rect sourceRectangle;
         SDL_Rect destinationRectangle;
         glm::vec2 position;
 
         TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, std::string assetTextureId) {
             texture = Game::assetManager->GetTexture(assetTextureId);
-            
-            this->sourceRectangle.x = sourceRectX;
-            this->sourceRectangle.y = sourceRectY;
-            this->sourceRectangle.w = tileSize;
-            this->sourceRectangle.h = tileSize;
 
-            this->destinationRectangle.x = x;
-            this->destinationRectangle.y = y;
-            this->destinationRectangle.w = tileSize * tileScale;
-            this->destinationRectangle.h = tileSize * tileScale;
+            sourceRectangle.x = sourceRectX;
+            sourceRectangle.y = sourceRectY;
+            sourceRectangle.w = tileSize;
+            sourceRectangle.h = tileSize;
 
-            this->position.x = x;
-            this->position.y = y;
+            destinationRectangle.x = x;
+            destinationRectangle.y = y;
+            destinationRectangle.w = tileSize * tileScale;
+            destinationRectangle.h = tileSize * tileScale;
+
+            position.x = x;
+            position.y = y;
         }
 
         ~TileComponent() {
             SDL_DestroyTexture(texture);
         }
 
-        void Update(float deltaTime) override {            
+        void Update(float deltaTime) override {
             destinationRectangle.x = position.x - Game::camera.x;
             destinationRectangle.y = position.y - Game::camera.y;
         }
