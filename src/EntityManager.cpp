@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include "./EntityManager.h"
 #include "./Collision.h"
 #include "./Components/ColliderComponent.h"
@@ -12,6 +13,15 @@ void EntityManager::ClearData() {
 void EntityManager::Update(float deltaTime) {
     for (auto& entity: entities) {
         entity->Update(deltaTime);
+    }
+    DestroyInactiveEntities();
+}
+
+void EntityManager::DestroyInactiveEntities() {
+    for (int i = 0; i < entities.size(); i++) {
+        if (!entities[i]->IsActive()) {
+            entities.erase(entities.begin() + i);
+        }
     }
 }
 
@@ -60,18 +70,54 @@ Entity& EntityManager::AddEntity(std::string entityName, LayerType layer) {
     return *entity;
 }
 
-std::string EntityManager::CheckEntityCollisions(Entity& myEntity) const {
-    ColliderComponent* myCollider = myEntity.GetComponent<ColliderComponent>();
-    for (auto& entity: entities) {
-        // Can't we instead check layers?
-        if (entity->name.compare(myEntity.name) != 0 && entity->name.compare("Tile") != 0) {
-            if (entity->HasComponent<ColliderComponent>()) {
-                ColliderComponent* otherCollider = entity->GetComponent<ColliderComponent>();
-                if (Collision::CheckRectangleCollision(myCollider->collider, otherCollider->collider)) {
-                    return otherCollider->colliderTag;
-                }
+CollisionType EntityManager::CheckCollisions() const {
+    for (int i = 0; i < entities.size() - 1; i++) {
+        if (!this->entities[i]->HasComponent<ColliderComponent>()) {
+            continue;
+        }
+
+        ColliderComponent* thisCollider = this->entities[i]->GetComponent<ColliderComponent>();
+
+        for (int j = i + 1; j < entities.size(); j++) {            
+            if (!this->entities[j]->HasComponent<ColliderComponent>()) {
+                continue;
+            }
+
+            ColliderComponent* otherCollider = this->entities[j]->GetComponent<ColliderComponent>();
+
+            printf("thisCollider tag: %s\n", thisCollider->colliderTag.c_str());
+            printf("otherCollider tag: %s\n", otherCollider->colliderTag.c_str());
+
+            if (!Collision::CheckRectangleCollision(thisCollider->collider, otherCollider->collider)) {
+                continue;
+            }
+
+            printf("Collided %b %b\n", thisCollider->colliderTag.compare("PLAYER"), otherCollider->colliderTag.compare("ENEMY"));
+
+            // TODO: Room for improvement right here
+            // Sort or use another datastructure so we dont have to check both i, j for colliderTag?
+
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0) ||
+                (thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
+                return PLAYER_ENEMY_COLLISION;
+            }
+
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("PROJECTILE") == 0) ||
+                (thisCollider->colliderTag.compare("PROJECTILE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
+                return PLAYER_PROJECTILE_COLLISION;
+            }
+
+            if ((thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0) ||
+                (thisCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0)) {
+                return ENEMY_PROJECTILE_COLLISION;
+            }
+
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("LEVEL_COMPLETE") == 0) ||
+                (thisCollider->colliderTag.compare("LEVEL_COMPLETE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
+                return PLAYER_LEVEL_COMPLETE_COLLISION;
             }
         }
     }
-    return std::string();
+
+    return NO_COLLISION;
 }

@@ -12,9 +12,7 @@
 
 class ColliderComponent: public Component {
     public:
-        std::string assetTextureId;
-        std::string colliderTag;
-		std::string toggleKey;
+        std::string colliderTag;	
         SDL_Rect collider;
         SDL_Rect sourceRectangle;
         SDL_Rect destinationRectangle;
@@ -25,7 +23,6 @@ class ColliderComponent: public Component {
         ColliderComponent(std::string colliderTag, int x, int y, int width, int height) {
             this->colliderTag = colliderTag;
             this->collider = { x, y, width, height };
-			this->toggleKey = toggleKey;
         }
 
         ColliderComponent(std::string colliderTag, int x, int y, int width, int height, std::string assetTextureId) {
@@ -34,8 +31,7 @@ class ColliderComponent: public Component {
             SetTexture(assetTextureId);
         }
 
-        void SetTexture(std::string assetTextureId) {
-			this->assetTextureId = assetTextureId;
+        void SetTexture(std::string assetTextureId) {			
             this->texture = Game::assetManager->GetTexture(assetTextureId);
         }
 

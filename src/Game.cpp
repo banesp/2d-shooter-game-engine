@@ -7,6 +7,8 @@
 #include "./Components/SpriteComponent.h"
 #include "./Components/KeyboardControlComponent.h"
 #include "./Components/ColliderComponent.h"
+#include "./Components/TextLabelComponent.h"
+#include "./Components/ProjectileEmitterComponent.h"
 #include "../lib/glm/glm.hpp"
 
 EntityManager manager;
@@ -30,6 +32,10 @@ bool Game::IsRunning() const {
 void Game::Initialize(int width, int height) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << "Error initializing SDL." << std::endl;
+        return;
+    }
+    if (TTF_Init() != 0) {
+        std::cerr << "Error initializing SDL TTF" << std::endl;
         return;
     }
     window = SDL_CreateWindow(
@@ -66,6 +72,10 @@ void Game::LoadLevel(int levelNumber) {
     assetManager->AddTexture("radar-image", std::string("./assets/images/radar.png").c_str());
     assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
     assetManager->AddTexture("collision-texture", std::string("./assets/images/collision-texture.png").c_str());
+    assetManager->AddTexture("heliport-image", std::string("./assets/images/heliport.png").c_str());
+    assetManager->AddTexture("projectile-image", std::string("./assets/images/heliport.png").c_str());
+
+    assetManager->AddFont("charriot-font", std::string("./assets/fonts/charriot.ttf").c_str(), 14);
 
     map = new Map("jungle-tiletexture", 2, 32);
     map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
@@ -74,16 +84,30 @@ void Game::LoadLevel(int levelNumber) {
     player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
     player.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
     player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
-    player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32, "collision-texture");
+    player.AddComponent<ColliderComponent>("PLAYER", 240, 106, 32, 32, "collision-texture");
     
     Entity& tankEntity(manager.AddEntity("tank", ENEMY_LAYER));
     tankEntity.AddComponent<TransformComponent>(150, 495, 5, 0, 32, 32, 1);
     tankEntity.AddComponent<SpriteComponent>("tank-image");
-    tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32, "collision-texture");
+    tankEntity.AddComponent<ColliderComponent>("ENEMY", 150, 495, 32, 32, "collision-texture");
+
+    Entity& projectileEntity(manager.AddEntity("projectile", PROJECTILE_LAYER));
+    projectileEntity.AddComponent<TransformComponent>(150 + 16, 495 + 16, 0, 0, 4, 4, 1);
+    projectileEntity.AddComponent<SpriteComponent>("projectile-image");
+    projectileEntity.AddComponent<ColliderComponent>("PROJECTILE", 150 + 16, 495 + 16, 4, 4);
+    projectileEntity.AddComponent<ProjectileEmitterComponent>(50, 270, 200, true);
     
     Entity& radarEntity(manager.AddEntity("Radar", UI_LAYER));
     radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
     radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);    
+
+    Entity& heliport(manager.AddEntity("Heliport", OBSTACLE_LAYER));
+    heliport.AddComponent<TransformComponent>(470, 420, 0, 0, 32, 32, 1);
+    heliport.AddComponent<SpriteComponent>("heliport-image");
+    heliport.AddComponent<ColliderComponent>("LEVEL_COMPLETE", 470, 420, 32, 32);
+
+    Entity& labelLevelName(manager.AddEntity("LabelLevelName", UI_LAYER));
+    labelLevelName.AddComponent<TextLabelComponent>(10,10,"First level...", "charriot-font", WHITE_COLOR);
 }
 
 void Game::ProcessInput() {
@@ -149,10 +173,32 @@ void Game::HandleCameraMovement() {
     camera.y = camera.y > camera.h ? camera.h : camera.y;
 }
 
-void Game::CheckCollisions() {
-    std::string collisionTagType = manager.CheckEntityCollisions(player);
-    if (collisionTagType.compare("enemy") == 0) {
+void Game::CheckCollisions() {    
+    switch (manager.CheckCollisions())
+    {
+    case NO_COLLISION:
+        std::cout << "NO_COLLISION" << std::endl;
+        break;
+    case PLAYER_ENEMY_COLLISION:
+        std::cout << "PLAYER_ENEMY_COLLISION" << std::endl;
         isRunning = false;
+        break;
+    case PLAYER_PROJECTILE_COLLISION:
+        std::cout << "PLAYER_PROJECTILE_COLLISION" << std::endl;
+        isRunning = false;
+        break;
+    case ENEMY_PROJECTILE_COLLISION:
+        std::cout << "ENEMY_PROJECTILE_COLLISION" << std::endl;
+        break;
+    case PLAYER_VEGETATION_COLLISION:
+        std::cout << "PLAYER_VEGETATION_COLLISION" << std::endl;
+        break;
+    case PLAYER_LEVEL_COMPLETE_COLLISION:
+        isRunning = false;
+        std::cout << "PLAYER_LEVEL_COMPLETE_COLLISION" << std::endl;
+        break;
+    default:
+        break;
     }
 }
 
