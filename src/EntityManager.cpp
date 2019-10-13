@@ -11,10 +11,14 @@ void EntityManager::ClearData() {
 }
 
 void EntityManager::Update(float deltaTime) {
-    for (auto& entity: entities) {
-        entity->Update(deltaTime);
+    for (int i = 0; i < entities.size(); i++) {
+        entities[i]->Update(deltaTime);
+
+        // If entity is no longer active erase it from the EntityManager
+        if (!entities[i]->IsActive()) {
+            entities.erase(entities.begin() + i);
+        }
     }
-    DestroyInactiveEntities();
 }
 
 void EntityManager::DestroyInactiveEntities() {

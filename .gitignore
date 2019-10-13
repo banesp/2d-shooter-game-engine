@@ -9,5 +9,5 @@
 
 bin/
 lib/
-assets/
+# assets/
 .vscode/

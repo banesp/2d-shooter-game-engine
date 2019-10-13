@@ -17,6 +17,7 @@ SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
 SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 Map* map;
+Entity* player = NULL;
 
 Game::Game() {
     this->isRunning = false;
@@ -56,58 +57,66 @@ void Game::Initialize(int width, int height) {
         return;
     }
 
-    LoadLevel(0);
+    LoadLevel(1);
 
     isRunning = true;
+
     return;
 }
 
 
-Entity& player(manager.AddEntity("chopper", PLAYER_LAYER));
+// Entity& player(manager.AddEntity("chopper", PLAYER_LAYER));
 
-void Game::LoadLevel(int levelNumber) {
-    /* Start including new assets to the assetmanager list */
-    assetManager->AddTexture("tank-image", std::string("./assets/images/tank-big-right.png").c_str());
-    assetManager->AddTexture("chopper-image", std::string("./assets/images/chopper-spritesheet.png").c_str());
-    assetManager->AddTexture("radar-image", std::string("./assets/images/radar.png").c_str());
-    assetManager->AddTexture("jungle-tiletexture", std::string("./assets/tilemaps/jungle.png").c_str());
-    assetManager->AddTexture("collision-texture", std::string("./assets/images/collision-texture.png").c_str());
-    assetManager->AddTexture("heliport-image", std::string("./assets/images/heliport.png").c_str());
-    assetManager->AddTexture("projectile-image", std::string("./assets/images/heliport.png").c_str());
+void Game::LoadLevel(int levelNumber) {    
+    sol::state lua;
+    lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
 
-    assetManager->AddFont("charriot-font", std::string("./assets/fonts/charriot.ttf").c_str(), 14);
+    std::string levelName = "Level" + std::to_string(levelNumber);
+    lua.script_file("./assets/scripts/" + levelName + ".lua");    
 
-    map = new Map("jungle-tiletexture", 2, 32);
-    map->LoadMap("./assets/tilemaps/jungle.map", 25, 20);
+    /*********************************************/
+    /* LOADS ASSETS FROM LUA CONFIG FILE         */
+    /*********************************************/    
+    sol::table levelData = lua[levelName];
+    sol::table levelAssets = levelData["assets"];   
+ 
+    unsigned int assetIndex = 0;
+    while (true) {
+        sol::optional<sol::table> existsAssetIndexNode = levelAssets[assetIndex]; 
+        if (existsAssetIndexNode == sol::nullopt) {
+            break;
+        } else {
+            sol::table asset = levelAssets[assetIndex];
+            std::string assetType = asset["type"];
+            if (assetType.compare("texture") == 0) {
+                std::string assetId = asset["id"];
+                std::string assetFile = asset["file"];
+                assetManager->AddTexture(assetId, assetFile.c_str());
+            } 
+        }
+        assetIndex++;
+    }
 
-    /* Start including entities and also components to them */
-    player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
-    player.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
-    player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "space");
-    player.AddComponent<ColliderComponent>("PLAYER", 240, 106, 32, 32, "collision-texture");
-    
-    Entity& tankEntity(manager.AddEntity("tank", ENEMY_LAYER));
-    tankEntity.AddComponent<TransformComponent>(150, 495, 5, 0, 32, 32, 1);
-    tankEntity.AddComponent<SpriteComponent>("tank-image");
-    tankEntity.AddComponent<ColliderComponent>("ENEMY", 150, 495, 32, 32, "collision-texture");
+    /*********************************************/
+    /* LOADS MAP FROM LUA CONFIG FILE            */
+    /*********************************************/    
+    sol::table levelMap = levelData["map"];
+    std::string mapTextureId = levelMap["textureAssetId"];
+    std::string mapFile = levelMap["file"];
 
-    Entity& projectileEntity(manager.AddEntity("projectile", PROJECTILE_LAYER));
-    projectileEntity.AddComponent<TransformComponent>(150 + 16, 495 + 16, 0, 0, 4, 4, 1);
-    projectileEntity.AddComponent<SpriteComponent>("projectile-image");
-    projectileEntity.AddComponent<ColliderComponent>("PROJECTILE", 150 + 16, 495 + 16, 4, 4);
-    projectileEntity.AddComponent<ProjectileEmitterComponent>(50, 270, 200, true);
-    
-    Entity& radarEntity(manager.AddEntity("Radar", UI_LAYER));
-    radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
-    radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);    
+    map = new Map(
+        mapTextureId,
+        static_cast<int>(levelMap["scale"]),
+        static_cast<int>(levelMap["tileSize"])
+    );
 
-    Entity& heliport(manager.AddEntity("Heliport", OBSTACLE_LAYER));
-    heliport.AddComponent<TransformComponent>(470, 420, 0, 0, 32, 32, 1);
-    heliport.AddComponent<SpriteComponent>("heliport-image");
-    heliport.AddComponent<ColliderComponent>("LEVEL_COMPLETE", 470, 420, 32, 32);
+    map->LoadMap(
+        mapFile,
+        static_cast<int>(levelMap["mapSizeX"]),
+        static_cast<int>(levelMap["mapSizeY"])
+    );
 
-    Entity& labelLevelName(manager.AddEntity("LabelLevelName", UI_LAYER));
-    labelLevelName.AddComponent<TextLabelComponent>(10,10,"First level...", "charriot-font", WHITE_COLOR);
+    std::cout << "Level1 loaded.." << std::endl;
 }
 
 void Game::ProcessInput() {
@@ -129,22 +138,16 @@ void Game::ProcessInput() {
 }
 
 void Game::Update() {
-    // Wait until 16ms has ellapsed since the last frame
+    // Wait until 16ms has ellapsed since the last frame    
     while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TARGET_TIME));
-
-    // Delta time is the difference in ticks from last frame converted to seconds
-    float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
-
-    // Clamp deltaTime to a maximum value
-    deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
-
-    // Sets the new ticks for the current frame to be used in the next pass
-    ticksLastFrame = SDL_GetTicks();
+    
+    float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f; // Delta time is the difference in ticks from last frame converted to seconds    
+    deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;    // Clamp deltaTime to a maximum value    
+    ticksLastFrame = SDL_GetTicks(); // Sets the new ticks for the current frame to be used in the next pass
 
     manager.Update(deltaTime);
 
     HandleCameraMovement();
-
     CheckCollisions();
 }
 
@@ -162,11 +165,14 @@ void Game::Render() {
 }
 
 void Game::HandleCameraMovement() {
-    TransformComponent* mainPlayerTransform = player.GetComponent<TransformComponent>();
+    if (!player) {
+        std::cout << "Player not configured. Ignoring camera movement.." << std::endl;
+        return;
+    }
 
+    TransformComponent* mainPlayerTransform = player->GetComponent<TransformComponent>();
     camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
     camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
-
     camera.x = camera.x < 0 ? 0 : camera.x;
     camera.y = camera.y < 0 ? 0 : camera.y;
     camera.x = camera.x > camera.w ? camera.w : camera.x;
@@ -177,7 +183,7 @@ void Game::CheckCollisions() {
     switch (manager.CheckCollisions())
     {
     case NO_COLLISION:
-        std::cout << "NO_COLLISION" << std::endl;
+        //std::cout << "NO_COLLISION" << std::endl;
         break;
     case PLAYER_ENEMY_COLLISION:
         std::cout << "PLAYER_ENEMY_COLLISION" << std::endl;
