@@ -65,9 +65,6 @@ class ColliderComponent: public Component {
 
         void Render() override {
             if (texture) {
-				//printf("sourceRectangle { x: %i, y: %i, w: %i, h: %i }\n", sourceRectangle.x, sourceRectangle.y, sourceRectangle.w, sourceRectangle.h);
-				printf("%s --> { x: %i, y: %i, w: %i, h: %i }\n", owner->name.c_str(), collider.x, collider.y, collider.w, collider.h);
-
 				if (showTexture) {
                 	TextureManager::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
 				}

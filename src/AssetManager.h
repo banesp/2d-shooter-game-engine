@@ -3,9 +3,12 @@
 
 #include <map>
 #include <string>
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include "./TextureManager.h"
 #include "./FontManager.h"
+#include "./SoundManager.h"
 #include "./EntityManager.h"
 
 class AssetManager {
@@ -13,6 +16,7 @@ class AssetManager {
         EntityManager* manager;
         std::map<std::string, SDL_Texture*> textures;
         std::map<std::string, TTF_Font*> fonts;
+        std::map<std::string, Mix_Chunk*> sounds;
 
     public:
         AssetManager(EntityManager* manager);
@@ -25,6 +29,9 @@ class AssetManager {
 
         void AddFont(std::string fontId, const char* filePath, int fontSize);
         TTF_Font* GetFont(std::string fontId);
+
+        void AddSound(std::string soundId, const char* filePath);
+        Mix_Chunk* GetSound(std::string soundId);
 };
 
 #endif

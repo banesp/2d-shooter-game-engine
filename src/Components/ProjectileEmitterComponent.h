@@ -28,9 +28,17 @@ class ProjectileEmitterComponent: public Component {
         }
         
         void Initialize() override {
-            transform = owner->GetComponent<TransformComponent>();
-            origin = glm::vec2(transform->position.x, transform->position.y);
-            transform->velocity = glm::vec2(glm::cos(angleRad) * speed, glm::sin(angleRad) * speed);
+            this->transform = owner->GetComponent<TransformComponent>();
+
+            this->origin = glm::vec2(
+                transform->position.x, 
+                transform->position.y
+            );
+
+            this->transform->velocity = glm::vec2(
+                glm::cos(angleRad) * speed, 
+                glm::sin(angleRad) * speed
+            );
         }
 
         void Update(float deltaTime) override {
@@ -41,6 +49,10 @@ class ProjectileEmitterComponent: public Component {
                     owner->Destroy();
                 }
             }
+        }
+
+        void Render() override {
+            
         }
 };
 
