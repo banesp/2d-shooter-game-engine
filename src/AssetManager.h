@@ -13,13 +13,12 @@
 
 class AssetManager {
     private:
-        EntityManager* manager;
         std::map<std::string, SDL_Texture*> textures;
         std::map<std::string, TTF_Font*> fonts;
         std::map<std::string, Mix_Chunk*> sounds;
 
     public:
-        AssetManager(EntityManager* manager);
+        AssetManager();
         ~AssetManager();
 
         void ClearData();

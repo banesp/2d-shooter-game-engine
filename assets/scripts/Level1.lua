@@ -434,7 +434,8 @@ Level1 = {
                     speed = 70,
                     range = 500,
                     angle = 0,
-
+                    width = 4,
+                    height = 4,
                     textureAssetId = "projectile-texture"
                 }
             }

@@ -1,7 +1,7 @@
 #include "./AssetManager.h"
 #include "./Components/TransformComponent.h"
 
-AssetManager::AssetManager(EntityManager* manager): manager(manager) {
+AssetManager::AssetManager() {
 }
 
 void AssetManager::ClearData() {
@@ -10,6 +10,7 @@ void AssetManager::ClearData() {
         SDL_DestroyTexture(textureIterator->second);
         textureIterator->second = nullptr;
     }
+
     textures.clear();
 
     std::map<std::string, TTF_Font*>::iterator fontsIterator;
@@ -17,6 +18,7 @@ void AssetManager::ClearData() {
         TTF_CloseFont(fontsIterator->second);
         fontsIterator->second = nullptr;
     }
+
     fonts.clear();
 
     std::map<std::string, Mix_Chunk*>::iterator soundsIterator;
@@ -24,6 +26,7 @@ void AssetManager::ClearData() {
         Mix_FreeChunk(soundsIterator->second);
         fontsIterator->second = nullptr;
     }
+    
     sounds.clear();
 }
 

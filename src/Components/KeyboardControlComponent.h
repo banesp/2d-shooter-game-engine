@@ -13,8 +13,8 @@ class KeyboardControlComponent: public Component {
         std::string rightKey;
         std::string leftKey;
         std::string shootKey;
-        TransformComponent *transform;
-        SpriteComponent *sprite;
+        TransformComponent *transform = nullptr;
+        SpriteComponent *sprite = nullptr;
 
         KeyboardControlComponent() {
 

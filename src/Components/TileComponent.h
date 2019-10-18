@@ -8,13 +8,14 @@
 
 class TileComponent: public Component {
     public:
-        SDL_Texture *texture;
+        SDL_Texture *texture = nullptr;
         SDL_Rect sourceRectangle;
         SDL_Rect destinationRectangle;
         glm::vec2 position;
 
+        // TODO: Pass in assetManager/texture rectangle instead of this
         TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, std::string assetTextureId) {
-            texture = Game::assetManager->GetTexture(assetTextureId);
+            texture = Level::assetManager->GetTexture(assetTextureId);
 
             sourceRectangle.x = sourceRectX;
             sourceRectangle.y = sourceRectY;
@@ -34,9 +35,10 @@ class TileComponent: public Component {
             SDL_DestroyTexture(texture);
         }
 
+        // TODO: Pass in camera rectangle instead of this
         void Update(float deltaTime) override {
-            destinationRectangle.x = position.x - Game::camera.x;
-            destinationRectangle.y = position.y - Game::camera.y;
+            destinationRectangle.x = position.x - Level::camera.x;
+            destinationRectangle.y = position.y - Level::camera.y;
         }
 
         void Render() override {

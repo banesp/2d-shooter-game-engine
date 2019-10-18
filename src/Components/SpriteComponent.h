@@ -8,8 +8,8 @@
 
 class SpriteComponent: public Component {
     private:
-        TransformComponent* transform;
-        SDL_Texture* texture;
+        TransformComponent* transform = nullptr;
+        SDL_Texture* texture = nullptr;
         SDL_Rect sourceRectangle;
         SDL_Rect destinationRectangle;
         bool isAnimated;
@@ -71,8 +71,9 @@ class SpriteComponent: public Component {
             currentAnimationName = animationName;
         }
 
+        // TODO: Pass in the texture instead of using global stuff
         void SetTexture(std::string assetTextureId) {
-            texture = Game::assetManager->GetTexture(assetTextureId);
+            texture = Level::assetManager->GetTexture(assetTextureId);
         }
 
         void Initialize() override {
@@ -89,8 +90,9 @@ class SpriteComponent: public Component {
             }
             sourceRectangle.y = animationIndex * transform->height;
 
-            destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Game::camera.x);
-            destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y);
+            // TODO: Global stuff
+            destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Level::camera.x);
+            destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Level::camera.y);
             destinationRectangle.w = transform->width * transform->scale;
             destinationRectangle.h = transform->height * transform->scale;
         }

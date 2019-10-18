@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <iostream>
 #include <SDL2/SDL.h>
-#include "../Game.h"
+#include "../Level.h"
 #include "../EntityManager.h"
 #include "../TextureManager.h"
 #include "../AssetManager.h"
@@ -16,9 +16,9 @@ class ColliderComponent: public Component {
         SDL_Rect collider;
         SDL_Rect sourceRectangle;
         SDL_Rect destinationRectangle;
-        SDL_Texture* texture;
+        SDL_Texture* texture = nullptr;
+        TransformComponent* transform = nullptr;
 		bool showTexture;
-        TransformComponent* transform;
 
         ColliderComponent(std::string colliderTag, int x, int y, int width, int height) {
             this->colliderTag = colliderTag;
@@ -32,7 +32,7 @@ class ColliderComponent: public Component {
         }
 
         void SetTexture(std::string assetTextureId) {			
-            this->texture = Game::assetManager->GetTexture(assetTextureId);
+            this->texture = Level::assetManager->GetTexture(assetTextureId);
         }
 
         void Initialize() override {
@@ -51,8 +51,9 @@ class ColliderComponent: public Component {
             collider.w = transform->width * transform->scale;
             collider.h = transform->height * transform->scale;
 
-            destinationRectangle.x = collider.x - Game::camera.x;
-            destinationRectangle.y = collider.y - Game::camera.y;
+            // Should pass in camera SDL_Rect instead of this
+            destinationRectangle.x = collider.x - Level::camera.x;
+            destinationRectangle.y = collider.y - Level::camera.y;
 
 			// Toggle collider texture with the 'c' key
 			// Just hardcoded for the moment.
