@@ -30,11 +30,18 @@ void Entity::Render()
 void Entity::Destroy()
 {
     this->isActive = false;
+
+    for (auto &entity : entities)
+    {
+        entity->Destroy();
+    }
+
     for (auto &component : components)
     {
         component->Destroy();
     }
 
+    entities.clear();
     components.clear();
     componentTypeMap.clear();
 }

@@ -100,6 +100,10 @@ class SpriteComponent: public Component {
         void Render() override {
             TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
         }
+
+        std::string GetCurrentAnimationName() {
+            return this->currentAnimationName;
+        }
 };
 
 #endif

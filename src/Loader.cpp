@@ -233,8 +233,6 @@ void Loader::LoadEntities(sol::table rootNode)
 
         if (keyboardControlComponentNode != sol::nullopt && keyboardControlInnerComponentNode != sol::nullopt)
         {
-            std::cout << "Adding KeyboardControlComponent to entity: " << entity.name << std::endl;
-
             sol::table keyboardControl = node["components"]["input"]["keyboard"];
 
             entity.AddComponent<KeyboardControlComponent>(
@@ -249,14 +247,13 @@ void Loader::LoadEntities(sol::table rootNode)
 
         if (projectileEmitterComponentNode != sol::nullopt)
         {
-            std::cout << "Adding ProjectileEmitterComponent to entity" << std::endl;
-
             sol::table projectileEmitter = node["components"]["projectileEmitter"];
 
             Entity &projectileEntity(entityManager->AddEntity("projectile", PROJECTILE_LAYER));
+            entity.AddEntity(&projectileEntity);
 
             if (entity.HasComponent<TransformComponent>())
-            {                
+            {
                 projectileEntity.AddComponent<TransformComponent>(
                     entity.GetComponent<TransformComponent>()->position.x + (entity.GetComponent<TransformComponent>()->width / 2),
                     entity.GetComponent<TransformComponent>()->position.y + (entity.GetComponent<TransformComponent>()->height / 2),
@@ -274,12 +271,6 @@ void Loader::LoadEntities(sol::table rootNode)
 
                 std::string projectileTextureId = projectileEmitter["textureAssetId"];
                 projectileEntity.AddComponent<SpriteComponent>(projectileTextureId);
-
-                std::cout << "FEmitter x: " << entity.GetComponent<TransformComponent>()->position.x << std::endl;
-                std::cout << "FEmitter y: " << entity.GetComponent<TransformComponent>()->position.y << std::endl;
-                std::cout << "FEmitter width: " << static_cast<int>(projectileEmitter["width"]) << std::endl;
-                std::cout << "FEmitter height: " << static_cast<int>(projectileEmitter["height"]) << std::endl;
-
 
                 projectileEntity.AddComponent<ColliderComponent>(
                     "PROJECTILE",

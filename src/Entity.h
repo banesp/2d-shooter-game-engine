@@ -16,6 +16,7 @@ class Entity {
         EntityManager& manager;
         bool isActive;
         std::vector<Component*> components;
+        std::vector<Entity*> entities;
         std::map<const std::type_info*, Component*> componentTypeMap;
     public:
         std::string name;
@@ -27,6 +28,10 @@ class Entity {
         void Destroy();
         bool IsActive() const;
         void ListAllComponents() const;
+
+        void AddEntity(Entity* entity) {
+            entities.emplace_back(entity);
+        }
 
         template <typename T, typename... TArgs>
         T& AddComponent(TArgs&&... args) {

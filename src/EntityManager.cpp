@@ -23,10 +23,7 @@ void EntityManager::Update(float deltaTime)
         // If entity is no longer active erase it from the EntityManager
         if (!entities[i]->IsActive())
         {
-            // Clean up before erasing?
-            std::cout << "Erasing" << std::endl;
             entities.erase(entities.begin() + i);
-            std::cout << "Erased" << std::endl;
         }
     }
 }
@@ -108,7 +105,7 @@ CollisionType EntityManager::CheckCollisions() const
 
         ColliderComponent* thisCollider = this->entities[i]->GetComponent<ColliderComponent>();
 
-        for (int j = i + 1; j < entities.size(); j++) {            
+        for (int j = i + 1; j < entities.size(); j++) {
             if (!this->entities[j]->HasComponent<ColliderComponent>()) {
                 continue;
             }
@@ -119,23 +116,39 @@ CollisionType EntityManager::CheckCollisions() const
                 continue;
             }
 
-            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0) ||
-                (thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0)) {
+                return PLAYER_ENEMY_COLLISION;
+            }
+            if ((thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
                 return PLAYER_ENEMY_COLLISION;
             }
 
-            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("PROJECTILE") == 0) ||
-                (thisCollider->colliderTag.compare("PROJECTILE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("PROJECTILE") == 0)) {
+                return PLAYER_PROJECTILE_COLLISION;
+            }
+            if ((thisCollider->colliderTag.compare("PROJECTILE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
                 return PLAYER_PROJECTILE_COLLISION;
             }
 
-            if ((thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0) ||
-                (thisCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0)) {
+            /**
+             * TODO:
+             * Need a nicer way of handling collisions and game actions (For lives, points, game over etc).
+             */
+            if ((thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0)) {
+                this->entities[i]->Destroy();
+                this->entities[j]->Destroy();
+                return ENEMY_PROJECTILE_COLLISION;
+            }
+            if ((thisCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0)) {
+                this->entities[i]->Destroy();
+                this->entities[j]->Destroy();
                 return ENEMY_PROJECTILE_COLLISION;
             }
 
-            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("LEVEL_COMPLETE") == 0) ||
-                (thisCollider->colliderTag.compare("LEVEL_COMPLETE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("LEVEL_COMPLETE") == 0)) {
+                return PLAYER_LEVEL_COMPLETE_COLLISION;
+            }
+            if ((thisCollider->colliderTag.compare("LEVEL_COMPLETE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0)) {
                 return PLAYER_LEVEL_COMPLETE_COLLISION;
             }
         }
