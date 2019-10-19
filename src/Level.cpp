@@ -1,5 +1,7 @@
 #include "./Level.h"
 #include "./Components/TransformComponent.h"
+#include "./Components/ColliderComponent.h"
+#include "./Collision.h"
 #include <iostream>
 
 EntityManager *Level::entityManager = new EntityManager();
@@ -25,8 +27,10 @@ void Level::Initialize()
     loader->LoadLevel("Level1");
 
     // Set player camera
-    for (auto& entity : entityManager->GetEntities()) {
-        if (entity->name == "player") {
+    for (auto &entity : entityManager->GetEntities())
+    {
+        if (entity->name == "player")
+        {
             player = entity;
             return;
         }
@@ -73,30 +77,67 @@ void Level::HandleCameraMovement()
 
 void Level::CheckCollisions()
 {
-    switch (entityManager->CheckCollisions())
+    std::vector<Entity *> entities = entityManager->GetEntities();
+
+    for (int i = 0; i < entities.size() - 1; i++)
     {
-    case NO_COLLISION:
-        break;
-    case PLAYER_ENEMY_COLLISION:
-        std::cout << "PLAYER_ENEMY_COLLISION" << std::endl;
-        // TODO: Level failed
-        break;
-    case PLAYER_PROJECTILE_COLLISION:
-        std::cout << "PLAYER_PROJECTILE_COLLISION" << std::endl;
-        // TODO: Level failed
-        break;
-    case ENEMY_PROJECTILE_COLLISION:
-        std::cout << "ENEMY_PROJECTILE_COLLISION" << std::endl;
-        break;
-    case PLAYER_VEGETATION_COLLISION:
-        std::cout << "PLAYER_VEGETATION_COLLISION" << std::endl;
-        break;
-    case PLAYER_LEVEL_COMPLETE_COLLISION:
-        std::cout << "PLAYER_LEVEL_COMPLETE_COLLISION" << std::endl;
-        // TODO: Level finished, transition to main menu or new level
-        break;
-    default:
-        break;
+        if (!entities[i]->HasComponent<ColliderComponent>())
+        {
+            continue;
+        }
+
+        ColliderComponent *thisCollider = entities[i]->GetComponent<ColliderComponent>();
+
+        for (int j = i + 1; j < entities.size(); j++)
+        {
+            if (!entities[j]->HasComponent<ColliderComponent>())
+            {
+                continue;
+            }
+
+            ColliderComponent *otherCollider = entities[j]->GetComponent<ColliderComponent>();
+
+            if (!Collision::CheckRectangleCollision(thisCollider->collider, otherCollider->collider))
+            {
+                continue;
+            }
+
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0))
+            {
+                // U ded
+            }
+            if ((thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0))
+            {
+                // U ded
+            }
+
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("PROJECTILE") == 0))
+            {
+                // U ded
+            }
+            if ((thisCollider->colliderTag.compare("PROJECTILE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0))
+            {
+                // U ded
+            }
+
+            if ((thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0))
+            {
+                entities[i]->Destroy();
+                entities[j]->Destroy();
+            }
+            if ((thisCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0))
+            {
+                entities[i]->Destroy();
+                entities[j]->Destroy();
+            }
+
+            if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("LEVEL_COMPLETE") == 0))
+            {
+            }
+            if ((thisCollider->colliderTag.compare("LEVEL_COMPLETE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0))
+            {
+            }
+        }
     }
 }
 

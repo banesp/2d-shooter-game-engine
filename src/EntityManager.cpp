@@ -20,7 +20,6 @@ void EntityManager::Update(float deltaTime)
     {
         entities[i]->Update(deltaTime);
 
-        // If entity is no longer active erase it from the EntityManager
         if (!entities[i]->IsActive())
         {
             entities.erase(entities.begin() + i);
