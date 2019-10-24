@@ -1,8 +1,7 @@
 #include "./Game.h"
 #include "./Constants.h"
-#include "./AssetManager.h"
-#include "./EntityManager.h"
-#include "../lib/glm/glm.hpp"
+#include "./States/PlayState.h"
+#include "./States/MainMenuState.h"
 #include <iostream>
 
 SDL_Renderer *Game::renderer;
@@ -11,13 +10,13 @@ SDL_Event Game::event;
 Game::Game()
 {
     this->isRunning = false;
-    this->level = new Level();
+    this->gameStateMachine = new GameStateMachine();
 }
 
 Game::~Game()
 {
-    this->level = nullptr;
     this->window = nullptr;
+    this->gameStateMachine = nullptr;
     Game::renderer = nullptr;
 }
 
@@ -62,7 +61,7 @@ void Game::Initialize(int width, int height)
         return;
     }
 
-    level->Initialize();
+    gameStateMachine->PushState(new PlayState());
 
     isRunning = true;
 }
@@ -76,14 +75,6 @@ void Game::ProcessInput()
     {
         isRunning = false;
         break;
-    }
-    case SDL_KEYDOWN:
-    {
-        if (event.key.keysym.sym == SDLK_ESCAPE)
-        {
-            isRunning = false;
-            break;
-        }
     }
     default:
     {
@@ -102,7 +93,7 @@ void Game::Update()
 
     ticksLastFrame = SDL_GetTicks();
 
-    level->Update(clampTime);
+    gameStateMachine->Update(clampTime);
 }
 
 void Game::Render()
@@ -110,14 +101,15 @@ void Game::Render()
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
-    level->Render();
+    gameStateMachine->Render();
 
     SDL_RenderPresent(renderer);
 }
 
 void Game::Destroy()
 {
-    level->Destroy();
+    gameStateMachine->Destroy();
+
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();

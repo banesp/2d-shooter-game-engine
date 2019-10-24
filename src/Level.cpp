@@ -1,7 +1,7 @@
 #include "./Level.h"
+#include "./Collision.h"
 #include "./Components/TransformComponent.h"
 #include "./Components/ColliderComponent.h"
-#include "./Collision.h"
 #include <iostream>
 
 EntityManager *Level::entityManager = new EntityManager();
@@ -25,8 +25,10 @@ Level::~Level()
 void Level::Initialize()
 {
     loader->LoadLevel("Level1");
+}
 
-    // Set player camera
+void Level::SetPlayerCamera()
+{
     for (auto &entity : entityManager->GetEntities())
     {
         if (entity->name == "player")
@@ -78,6 +80,7 @@ void Level::HandleCameraMovement()
 void Level::CheckCollisions()
 {
     std::vector<Entity *> entities = entityManager->GetEntities();
+    std::cout << "Number of entities: " << entities.size() << std::endl;
 
     for (int i = 0; i < entities.size() - 1; i++)
     {
@@ -113,22 +116,24 @@ void Level::CheckCollisions()
 
             if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("PROJECTILE") == 0))
             {
-                // U ded
+                // U half-ded
             }
             if ((thisCollider->colliderTag.compare("PROJECTILE") == 0 && otherCollider->colliderTag.compare("PLAYER") == 0))
             {
-                // U ded
+                // U half-ded
             }
 
             if ((thisCollider->colliderTag.compare("ENEMY") == 0 && otherCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0))
             {
                 entities[i]->Destroy();
                 entities[j]->Destroy();
+                score += 100;
             }
             if ((thisCollider->colliderTag.compare("FRIENDLY_PROJECTILE") == 0 && otherCollider->colliderTag.compare("ENEMY") == 0))
             {
                 entities[i]->Destroy();
                 entities[j]->Destroy();
+                score += 100;
             }
 
             if ((thisCollider->colliderTag.compare("PLAYER") == 0 && otherCollider->colliderTag.compare("LEVEL_COMPLETE") == 0))

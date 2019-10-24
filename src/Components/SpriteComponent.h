@@ -5,6 +5,7 @@
 #include "../TextureManager.h"
 #include "../AssetManager.h"
 #include "../Animation.h"
+#include "../Level.h"
 
 class SpriteComponent: public Component {
     private:

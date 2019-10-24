@@ -11,6 +11,7 @@ class AssetManager;
 
 class Level {
     private:
+        int score = 0;
         Entity* player = nullptr;
         
         static Loader* loader;
@@ -24,6 +25,7 @@ class Level {
         ~Level();
 
         void Initialize();
+        void SetPlayerCamera();
         void ProcessInput();
         void Update(float deltaTime);
         void Render();

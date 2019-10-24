@@ -4,32 +4,32 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "./Level.h"
+#include "./States/GameStateMachine.h"
 
-class Level;
+// class GameStateMachine;
 
-class Game {
-    private:
-        bool isRunning;
-        SDL_Window *window = nullptr;
-        Level *level = nullptr;
+class Game
+{
+private:
+    bool isRunning = false;
+    int ticksLastFrame = 0;
 
-    public:
-        int ticksLastFrame = 0; // Should be private
+    SDL_Window *window = nullptr;
+    GameStateMachine *gameStateMachine = nullptr;
 
-        static SDL_Renderer *renderer;
+public:
+    static SDL_Renderer *renderer;
+    static SDL_Event event;
 
-        static SDL_Event event;
+    Game();
+    ~Game();
 
-        Game();
-        ~Game();
-
-        bool IsRunning() const;
-        void Initialize(int width, int height);
-        void ProcessInput();
-        void Update();
-        void Render();
-        void Destroy();
+    bool IsRunning() const;
+    void Initialize(int width, int height);
+    void ProcessInput();
+    void Update();
+    void Render();
+    void Destroy();
 };
 
 #endif
