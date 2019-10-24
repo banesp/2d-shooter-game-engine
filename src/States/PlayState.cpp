@@ -34,3 +34,9 @@ void PlayState::Destroy()
 {
     this->level->Destroy();
 }
+
+
+GameStateType PlayState::GetStateID() const
+{
+    return PLAY_STATE;
+}

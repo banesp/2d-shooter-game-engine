@@ -1,20 +1,23 @@
-#ifndef MAIN_MENU_STATE
-#define MAIN_MENU_STATE
+#ifndef MAIN_MENU_STATE_H
+#define MAIN_MENU_STATE_H
 
 #include "../States/GameState.h"
+#include "../Constants.h"
 
-class MainMenuState : public GameState
+class MainMenuState: public GameState
 {
 private:
 public:
     MainMenuState();
-    ~MainMenuState();
+    virtual ~MainMenuState();
 
-    void Initialize();
-    void ProcessInput();
-    void Update(float deltaTime);
-    void Render();
-    void Destroy();
+    virtual GameStateType GetStateID() const;
+
+    virtual void Initialize();
+    virtual void ProcessInput();
+    virtual void Update(float deltaTime);
+    virtual void Render();
+    virtual void Destroy();
 };
 
 #endif

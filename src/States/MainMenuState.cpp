@@ -27,3 +27,8 @@ void MainMenuState::Render()
 void MainMenuState::Destroy()
 {
 }
+
+GameStateType MainMenuState::GetStateID() const
+{
+    return MAIN_MENU_STATE;
+}

@@ -31,7 +31,7 @@ enum LayerType
 };
 
 enum GameStateType
-{
+{    
     PLAY_STATE,
     MAIN_MENU_STATE
 };

@@ -1,12 +1,13 @@
 #ifndef PLAY_STATE_H
 #define PLAY_STATE_H
 
-#include "../States/GameState.h"
+#include "./GameState.h"
+#include "../Constants.h"
 #include "../Level.h"
 
 class Level;
 
-class PlayState : public GameState
+class PlayState: public GameState
 {
 private:
     Level *level = nullptr;
@@ -15,11 +16,13 @@ public:
     PlayState();
     virtual ~PlayState();
 
-    void Initialize();
-    void ProcessInput();
-    void Update(float deltaTime);
-    void Render();
-    void Destroy();
+    virtual void Initialize();
+    virtual void ProcessInput();
+    virtual void Update(float deltaTime);
+    virtual void Render();
+    virtual void Destroy();
+
+    virtual GameStateType GetStateID() const;
 };
 
 #endif
