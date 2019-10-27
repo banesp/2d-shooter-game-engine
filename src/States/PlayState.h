@@ -4,6 +4,7 @@
 #include "./GameState.h"
 #include "../Constants.h"
 #include "../Level.h"
+#include <SDL2/SDL.h>
 
 class Level;
 
@@ -16,11 +17,12 @@ public:
     PlayState();
     virtual ~PlayState();
 
-    virtual void Initialize();
-    virtual void ProcessInput();
+    virtual void OnEnterState();
+    virtual void OnExitState();
+    
+    virtual void ProcessInput(SDL_Event event);
     virtual void Update(float deltaTime);
     virtual void Render();
-    virtual void Destroy();
 
     virtual GameStateType GetStateID() const;
 };

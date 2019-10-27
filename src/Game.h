@@ -6,8 +6,6 @@
 #include <SDL2/SDL_ttf.h>
 #include "./States/GameStateMachine.h"
 
-// class GameStateMachine;
-
 class Game
 {
 private:

@@ -2,20 +2,23 @@
 #define GAME_STATE_MACHINE_H
 
 #include "../States/GameState.h"
+#include <SDL2/SDL.h>
 #include <vector>
 
 class GameStateMachine
 {
 private:
     std::vector<GameState *> states;
+
 public:
     GameStateMachine() {}
     ~GameStateMachine() {}
-    
+
     void ChangeState(GameState *state);
     void PushState(GameState *state);
     void PopState();
 
+    void ProcessInput(SDL_Event event);
     void Update(float deltaTime);
     void Render();
     void Destroy();

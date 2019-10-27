@@ -2,22 +2,28 @@
 #define MAIN_MENU_STATE_H
 
 #include "../States/GameState.h"
+#include "../States/GameStateMachine.h"
 #include "../Constants.h"
+#include "../Callback.h"
+#include <SDL2/SDL.h>
 
-class MainMenuState: public GameState
+class MainMenuState : public GameState
 {
 private:
+    GameStateMachine *gsm;
+
 public:
-    MainMenuState();
+    MainMenuState(GameStateMachine *gsm);
     virtual ~MainMenuState();
 
-    virtual GameStateType GetStateID() const;
+    virtual void OnEnterState();
+    virtual void OnExitState();
 
-    virtual void Initialize();
-    virtual void ProcessInput();
+    virtual void ProcessInput(SDL_Event event);
     virtual void Update(float deltaTime);
     virtual void Render();
-    virtual void Destroy();
+
+    virtual GameStateType GetStateID() const;
 };
 
 #endif

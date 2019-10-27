@@ -64,7 +64,6 @@ void Level::HandleCameraMovement()
 {
     if (!player)
     {
-        std::cout << "Sorry bud! No player here :/" << std::endl;
         return;
     }
 

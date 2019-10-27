@@ -61,7 +61,7 @@ void Game::Initialize(int width, int height)
         return;
     }
 
-    gameStateMachine->PushState(new PlayState());
+    gameStateMachine->PushState(new MainMenuState(gameStateMachine));
 
     isRunning = true;
 }
@@ -78,7 +78,7 @@ void Game::ProcessInput()
     }
     default:
     {
-        break;
+        this->gameStateMachine->ProcessInput(event);
     }
     }
 }
@@ -86,13 +86,12 @@ void Game::ProcessInput()
 void Game::Update()
 {
     while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TARGET_TIME))
-        ;
+    {
+    }
 
     float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
     float clampTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
-
     ticksLastFrame = SDL_GetTicks();
-
     gameStateMachine->Update(clampTime);
 }
 
@@ -100,16 +99,13 @@ void Game::Render()
 {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
-
     gameStateMachine->Render();
-
     SDL_RenderPresent(renderer);
 }
 
 void Game::Destroy()
 {
     gameStateMachine->Destroy();
-
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();

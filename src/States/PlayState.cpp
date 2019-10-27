@@ -1,4 +1,5 @@
 #include "../States/PlayState.h"
+#include <iostream>
 
 PlayState::PlayState()
 {
@@ -10,12 +11,19 @@ PlayState::~PlayState()
     this->level = nullptr;
 }
 
-void PlayState::Initialize()
+void PlayState::OnEnterState()
 {
+    std::cout << "PlayState::OnEnterState()" << std::endl;
     this->level->Initialize();
 }
 
-void PlayState::ProcessInput()
+void PlayState::OnExitState()
+{
+    std::cout << "PlayState::OnExitState()" << std::endl;
+    this->level->Destroy();
+}
+
+void PlayState::ProcessInput(SDL_Event event)
 {
     level->ProcessInput();
 }
@@ -29,12 +37,6 @@ void PlayState::Render()
 {
     this->level->Render();
 }
-
-void PlayState::Destroy()
-{
-    this->level->Destroy();
-}
-
 
 GameStateType PlayState::GetStateID() const
 {
