@@ -1,4 +1,4 @@
-#include "./Collision.h"
+#include "../Engine/Collision.h"
 
 bool Collision::CheckRectangleCollision(const SDL_Rect& rectangleA, const SDL_Rect& rectangleB) {
     return (

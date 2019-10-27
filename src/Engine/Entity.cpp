@@ -1,4 +1,4 @@
-#include "./Entity.h"
+#include "../Engine/Entity.h"
 #include <iostream>
 
 Entity::Entity(EntityManager &manager) : manager(manager)

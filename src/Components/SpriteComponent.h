@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 #include "../TextureManager.h"
 #include "../AssetManager.h"
-#include "../Animation.h"
 #include "../Level.h"
+#include "../Engine/Animation.h"
 
 class SpriteComponent: public Component {
     private:

@@ -1,12 +1,12 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "../Constants.h"
+#include "../EntityManager.h"
+#include "../Engine/Component.h"
 #include <vector>
 #include <string>
 #include <map>
-#include "./Constants.h"
-#include "./EntityManager.h"
-#include "./Component.h"
 
 class EntityManager;
 class Component;

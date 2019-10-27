@@ -2,18 +2,20 @@
 #define MAIN_MENU_STATE_H
 
 #include "../States/GameState.h"
-#include "../States/GameStateMachine.h"
+#include "../States/GameStateChanger.h"
 #include "../Constants.h"
-#include "../Callback.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 class MainMenuState : public GameState
 {
 private:
-    GameStateMachine *gsm;
+    GameStateChanger *gameStateChanger;
+    TTF_Font *font;
+    SDL_Texture *text;
 
 public:
-    MainMenuState(GameStateMachine *gsm);
+    MainMenuState(GameStateChanger *changer);
     virtual ~MainMenuState();
 
     virtual void OnEnterState();

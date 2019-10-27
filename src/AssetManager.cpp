@@ -47,7 +47,7 @@ TTF_Font* AssetManager::GetFont(std::string fontId) {
 }
 
 void AssetManager::AddSound(std::string soundId, const char* filePath) {
-    sounds.emplace(soundId, SoundManager::LoadSound(filePath));
+    sounds.emplace(soundId, SoundAPI::LoadSound(filePath));
 }
 
 Mix_Chunk* AssetManager::GetSound(std::string soundId) {

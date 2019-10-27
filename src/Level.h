@@ -1,12 +1,12 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include "./Entity.h"
-#include "./Loader.h"
+#include "./Engine/Entity.h"
+#include "./Data/LevelParser.h"
 #include "./AssetManager.h"
 #include "./EntityManager.h"
 
-class Loader;
+class LevelParser;
 class AssetManager;
 
 class Level {
@@ -14,7 +14,7 @@ class Level {
         int score = 0;
         Entity* player = nullptr;
         
-        static Loader* loader;
+        static LevelParser* loader;
         
     public:
         static SDL_Rect camera;

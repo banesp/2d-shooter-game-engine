@@ -1,12 +1,12 @@
 #include "./Level.h"
-#include "./Collision.h"
+#include "./Engine/Collision.h"
 #include "./Components/TransformComponent.h"
 #include "./Components/ColliderComponent.h"
 #include <iostream>
 
 EntityManager *Level::entityManager = new EntityManager();
 AssetManager *Level::assetManager = new AssetManager();
-Loader *Level::loader = new Loader(assetManager, entityManager);
+LevelParser *Level::loader = new LevelParser(assetManager, entityManager);
 SDL_Rect Level::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
 Level::Level()

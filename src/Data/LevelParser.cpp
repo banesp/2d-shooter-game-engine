@@ -1,21 +1,21 @@
-#include "./Loader.h"
-#include "./Constants.h"
-#include "./Components/TransformComponent.h"
-#include "./Components/SpriteComponent.h"
-#include "./Components/KeyboardControlComponent.h"
-#include "./Components/ColliderComponent.h"
-#include "./Components/TextLabelComponent.h"
-#include "./Components/ProjectileEmitterComponent.h"
-#include "./Components/TileComponent.h"
+#include "../Data/LevelParser.h"
+#include "../Constants.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/SpriteComponent.h"
+#include "../Components/KeyboardControlComponent.h"
+#include "../Components/ColliderComponent.h"
+#include "../Components/TextLabelComponent.h"
+#include "../Components/ProjectileEmitterComponent.h"
+#include "../Components/TileComponent.h"
 #include <fstream>
 
-Loader::Loader(AssetManager *assetManager, EntityManager *entityManager)
+LevelParser::LevelParser(AssetManager *assetManager, EntityManager *entityManager)
 {
     this->assetManager = assetManager;
     this->entityManager = entityManager;
 }
 
-void Loader::LoadLevel(std::string levelName)
+void LevelParser::LoadLevel(std::string levelName)
 {
     lua.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
     lua.script_file("./assets/scripts/" + levelName + ".lua");
@@ -38,7 +38,7 @@ void Loader::LoadLevel(std::string levelName)
     this->LoadEntities(lua[levelName]["entities"]);
 }
 
-void Loader::LoadAssets(sol::table node)
+void LevelParser::LoadAssets(sol::table node)
 {
     sol::optional<sol::table> opt = node;
 
@@ -81,7 +81,7 @@ void Loader::LoadAssets(sol::table node)
     }
 }
 
-void Loader::LoadMap(sol::table node)
+void LevelParser::LoadMap(sol::table node)
 {
     // Get data from script file
     sol::optional<sol::table> opt = node;
@@ -131,7 +131,7 @@ void Loader::LoadMap(sol::table node)
     mapFile.close();
 }
 
-void Loader::LoadEntities(sol::table rootNode)
+void LevelParser::LoadEntities(sol::table rootNode)
 {
     sol::optional<sol::table> opt = rootNode;
 

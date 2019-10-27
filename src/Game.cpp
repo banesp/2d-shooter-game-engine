@@ -61,6 +61,7 @@ void Game::Initialize(int width, int height)
         return;
     }
 
+    // TODO
     gameStateMachine->PushState(new MainMenuState(gameStateMachine));
 
     isRunning = true;
