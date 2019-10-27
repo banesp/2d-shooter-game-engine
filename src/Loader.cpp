@@ -166,7 +166,7 @@ void Loader::LoadEntities(sol::table rootNode)
 
         if (transformComponentNode != sol::nullopt)
         {
-            std::cout << "Adding TransformComponent to entity: " << entity.name << std::endl;
+            //std::cout << "Adding TransformComponent to entity: " << entity.name << std::endl;
 
             sol::table transform = node["components"]["transform"];
 
@@ -184,7 +184,7 @@ void Loader::LoadEntities(sol::table rootNode)
 
         if (spriteComponentNode != sol::nullopt)
         {
-            std::cout << "Adding SpriteComponent to entity: " << entity.name << std::endl;
+            //std::cout << "Adding SpriteComponent to entity: " << entity.name << std::endl;
 
             sol::table sprite = node["components"]["sprite"];
 
@@ -207,7 +207,7 @@ void Loader::LoadEntities(sol::table rootNode)
 
         if (colliderComponentNode != sol::nullopt)
         {
-            std::cout << "Adding ColliderComponent to entity: " << entity.name << std::endl;
+            //std::cout << "Adding ColliderComponent to entity: " << entity.name << std::endl;
 
             sol::table collider = node["components"]["collider"];
 

@@ -1,5 +1,5 @@
 #include "../States/MainMenuState.h"
-#include "../States/PlayState.h"
+#include "../Constants.h"
 #include <iostream>
 #include <string>
 
@@ -25,13 +25,15 @@ void MainMenuState::OnExitState()
 
 void MainMenuState::ProcessInput(SDL_Event event)
 {
+    std::cout << "MainMenuState::ProcessInput" << std::endl;
     if (event.type == SDL_KEYDOWN)
     {
+        std::cout << "MainMenuState::ProcessInput keydown" << std::endl;
         switch (event.key.keysym.sym)
         {
         case SDLK_RETURN:
-            std::cout << "Clicked the space key" << std::endl;
-            this->gsm->ChangeState(new PlayState());
+            std::cout << "Clicked the return key from MainMenuState" << std::endl;
+            this->gsm->ChangeState(PLAY_STATE);
             break;
         default:
             break;

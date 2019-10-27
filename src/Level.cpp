@@ -47,7 +47,7 @@ void Level::Update(float deltaTime)
 {
     entityManager->Update(deltaTime);
     HandleCameraMovement();
-    CheckCollisions();
+    // CheckCollisions();
 }
 
 void Level::Render()

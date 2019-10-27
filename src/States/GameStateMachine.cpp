@@ -1,21 +1,36 @@
 #include "../States/GameStateMachine.h"
+#include "../States/MainMenuState.h"
+#include "../States/PlayState.h"
 
-/**
- * Not a big fan of passing in state instances like this.
- * Shpuld use constant enum type instead. And do lazy-loading 
- * internally in the GSM.
- */
-void GameStateMachine::ChangeState(GameState *state)
+void GameStateMachine::ChangeState(GameStateType t)
 {
     if (!states.empty())
     {
-        // TODO: Do nothing if back == state
-        states.back()->OnEnterState();
+        if (states.back()->GetStateID() == t)
+        {
+            return;
+        }
+
+        states.back()->OnExitState();
         states.pop_back();
     }
 
-    states.push_back(state);
-    states.back()->OnEnterState();
+    switch (t)
+    {
+    case MAIN_MENU_STATE:
+        std::cout << "Changing state to MainMenuState" << std::endl;
+        states.push_back(new MainMenuState(this));
+        states.back()->OnEnterState();
+        break;
+    case PLAY_STATE:
+        std::cout << "Changing state to PlayState" << std::endl;
+        states.push_back(new PlayState(this));
+        states.back()->OnEnterState();
+        break;
+    default:
+        std::cout << "Changing state to default" << std::endl;
+        break;
+    }
 }
 
 void GameStateMachine::PushState(GameState *state)
@@ -63,7 +78,7 @@ void GameStateMachine::Destroy()
 {
     if (!states.empty())
     {
-        states.back()->OnExitState();
+        states.back()->OnExitState();        
         delete states.back();
     }
 

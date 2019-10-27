@@ -2,10 +2,12 @@
 #define GAME_STATE_MACHINE_H
 
 #include "../States/GameState.h"
+#include "../States/GameStateChanger.h"
+#include "../Constants.h"
 #include <SDL2/SDL.h>
 #include <vector>
 
-class GameStateMachine
+class GameStateMachine : public GameStateChanger
 {
 private:
     std::vector<GameState *> states;
@@ -14,7 +16,8 @@ public:
     GameStateMachine() {}
     ~GameStateMachine() {}
 
-    void ChangeState(GameState *state);
+    void ChangeState(GameStateType t);
+
     void PushState(GameState *state);
     void PopState();
 
