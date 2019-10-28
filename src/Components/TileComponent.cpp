@@ -31,5 +31,5 @@ void TileComponent::Update(float deltaTime)
 
 void TileComponent::Render()
 {
-    TextureManager::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
+    TextureAPI::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
 }

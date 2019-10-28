@@ -4,7 +4,7 @@
 #include "../Game.h"
 #include "../Level.h"
 #include "../EntityManager.h"
-#include "../TextureManager.h"
+#include "../Engine/TextureAPI.h"
 #include "../AssetManager.h"
 #include "../States/PlayState.h"
 #include "../Components/TransformComponent.h"
@@ -81,7 +81,7 @@ public:
         {
             if (showTexture)
             {
-                TextureManager::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
+                TextureAPI::Draw(texture, sourceRectangle, destinationRectangle, SDL_FLIP_NONE);
             }
         }
     }

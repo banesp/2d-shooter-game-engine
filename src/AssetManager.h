@@ -1,15 +1,15 @@
 #ifndef ASSETMANAGER_H
 #define ASSETMANAGER_H
 
-#include "./TextureManager.h"
-#include "./Engine/FontManager.h"
-#include "./Engine/SoundAPI.h"
 #include "./EntityManager.h"
-#include <map>
-#include <string>
+#include "./Engine/FontManager.h"
+#include "./Engine/TextureAPI.h"
+#include "./Engine/SoundAPI.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include <map>
+#include <string>
 
 class AssetManager
 {

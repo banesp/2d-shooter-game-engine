@@ -2,10 +2,10 @@
 #define SPRITECOMPONENT_H
 
 #include "../Game.h"
-#include "../TextureManager.h"
 #include "../AssetManager.h"
 #include "../Level.h"
 #include "../States/PlayState.h"
+#include "../Engine/TextureAPI.h"
 #include "../Engine/Animation.h"
 #include <SDL2/SDL.h>
 
@@ -115,7 +115,7 @@ public:
 
     void Render() override
     {
-        TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
+        TextureAPI::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
     }
 
     std::string GetCurrentAnimationName()

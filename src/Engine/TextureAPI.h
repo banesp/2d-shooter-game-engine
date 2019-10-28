@@ -1,10 +1,10 @@
-#ifndef TEXTUREMANAGER_H
-#define TEXTUREMANAGER_H
+#ifndef TEXTURE_API_H
+#define TEXTURE_API_H
 
-#include "./Game.h"
+#include "../Game.h"
 #include <SDL2/SDL.h>
 
-class TextureManager
+class TextureAPI
 {
 public:
     static SDL_Texture *LoadTexture(const char *fileName);
