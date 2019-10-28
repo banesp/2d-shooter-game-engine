@@ -1,6 +1,8 @@
 #ifndef MAIN_MENU_STATE_H
 #define MAIN_MENU_STATE_H
 
+#include "../EntityManager.h"
+#include "../AssetManager.h"
 #include "../States/GameState.h"
 #include "../States/GameStateChanger.h"
 #include "../Constants.h"
@@ -11,10 +13,11 @@ class MainMenuState : public GameState
 {
 private:
     GameStateChanger *gameStateChanger;
-    TTF_Font *font;
-    SDL_Texture *text;
 
 public:
+//    static AssetManager *assetManager;
+//    static EntityManager *entityManager;
+
     MainMenuState(GameStateChanger *changer);
     virtual ~MainMenuState();
 

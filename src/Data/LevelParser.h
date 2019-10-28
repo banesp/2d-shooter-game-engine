@@ -1,10 +1,11 @@
 #ifndef LEVEL_PARSER_H
 #define LEVEL_PARSER_H
 
-#include "../../lib/glm/glm.hpp"
-#include "../../lib/lua/sol.hpp"
+#include "../Data/MapParser.h"
 #include "../AssetManager.h"
 #include "../EntityManager.h"
+#include "../../lib/glm/glm.hpp"
+#include "../../lib/lua/sol.hpp"
 #include <stdio.h>
 #include <iostream>
 
@@ -21,15 +22,15 @@ class LevelParser
 {
 private:
     sol::state lua;
-    AssetManager *assetManager = nullptr;
-    EntityManager *entityManager = nullptr;
+
+    MapParser *mapParser = nullptr;
 
     void LoadAssets(sol::table node);
     void LoadMap(sol::table node);
     void LoadEntities(sol::table node);
 
 public:
-    LevelParser(AssetManager *assetManager, EntityManager *entityManager);
+    LevelParser();
     void LoadLevel(std::string levelNumber);
 };
 

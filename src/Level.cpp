@@ -4,10 +4,8 @@
 #include "./Components/ColliderComponent.h"
 #include <iostream>
 
-EntityManager *Level::entityManager = new EntityManager();
-AssetManager *Level::assetManager = new AssetManager();
-LevelParser *Level::loader = new LevelParser(assetManager, entityManager);
-SDL_Rect Level::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+LevelParser *Level::loader = new LevelParser();
+// SDL_Rect Level::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
 Level::Level()
 {
@@ -16,8 +14,6 @@ Level::Level()
 
 Level::~Level()
 {
-    entityManager = nullptr;
-    assetManager = nullptr;
     loader = nullptr;
     player = nullptr;
 }
@@ -29,7 +25,7 @@ void Level::Initialize()
 
 void Level::SetPlayerCamera()
 {
-    for (auto &entity : entityManager->GetEntities())
+    for (auto &entity : Game::entityManager->GetEntities())
     {
         if (entity->name == "player")
         {
@@ -45,19 +41,19 @@ void Level::ProcessInput()
 
 void Level::Update(float deltaTime)
 {
-    entityManager->Update(deltaTime);
+    Game::entityManager->Update(deltaTime);
     HandleCameraMovement();
-    // CheckCollisions();
+    CheckCollisions();
 }
 
 void Level::Render()
 {
-    if (entityManager->HasNoEntities())
+    if (Game::entityManager->HasNoEntities())
     {
         return;
     }
 
-    entityManager->Render();
+    Game::entityManager->Render();
 }
 
 void Level::HandleCameraMovement()
@@ -68,18 +64,18 @@ void Level::HandleCameraMovement()
     }
 
     TransformComponent *mainPlayerTransform = player->GetComponent<TransformComponent>();
-    camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
-    camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
-    camera.x = camera.x < 0 ? 0 : camera.x;
-    camera.y = camera.y < 0 ? 0 : camera.y;
-    camera.x = camera.x > camera.w ? camera.w : camera.x;
-    camera.y = camera.y > camera.h ? camera.h : camera.y;
+
+    Game::camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
+    Game::camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
+    Game::camera.x = Game::camera.x < 0 ? 0 : Game::camera.x;
+    Game::camera.y = Game::camera.y < 0 ? 0 : Game::camera.y;
+    Game::camera.x = Game::camera.x > Game::camera.w ? Game::camera.w : Game::camera.x;
+    Game::camera.y = Game::camera.y > Game::camera.h ? Game::camera.h : Game::camera.y;
 }
 
 void Level::CheckCollisions()
 {
-    std::vector<Entity *> entities = entityManager->GetEntities();
-    std::cout << "Number of entities: " << entities.size() << std::endl;
+    std::vector<Entity *> entities = Game::entityManager->GetEntities();
 
     for (int i = 0; i < entities.size() - 1; i++)
     {
@@ -147,6 +143,8 @@ void Level::CheckCollisions()
 
 void Level::Destroy()
 {
+    /*
     entityManager->ClearData();
     assetManager->ClearData();
+    */
 }

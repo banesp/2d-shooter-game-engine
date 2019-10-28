@@ -86,7 +86,7 @@ public:
             if (keyCode.compare(shootKey) == 0)
             {
                 // TODO: Should read projectile data from script file
-                Entity &projectile(Level::entityManager->AddEntity("projectile", PROJECTILE_LAYER));
+                Entity &projectile(Game::entityManager->AddEntity("projectile", PROJECTILE_LAYER));
 
                 int angle = 270;
                 if (sprite->GetCurrentAnimationName().compare("RightAnimation") == 0){

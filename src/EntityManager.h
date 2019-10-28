@@ -9,6 +9,7 @@
 class EntityManager
 {
 private:
+    std::vector<Entity *> uncollidableEntities;
     std::vector<Entity *> entities;
 
 public:

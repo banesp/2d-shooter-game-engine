@@ -1529,6 +1529,20 @@ Level1 = {
                     fixed = true
                 }
             }
+        },
+        [48] = {
+            name = "score",
+            layer = 6,
+            components = {
+                text = {
+                    position = {
+                        x = 0,
+                        y = 0
+                    },
+                    fontFamily = "charriot-font",
+                    value = "Score"
+                }
+            }
         }
     }
 }

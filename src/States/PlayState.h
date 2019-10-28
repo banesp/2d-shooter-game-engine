@@ -15,7 +15,7 @@ private:
     GameStateMachine *gsm = nullptr;
     Level *level = nullptr;
 
-public:
+public:    
     PlayState(GameStateMachine *gsm);
     virtual ~PlayState();
 

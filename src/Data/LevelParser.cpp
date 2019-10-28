@@ -9,10 +9,9 @@
 #include "../Components/TileComponent.h"
 #include <fstream>
 
-LevelParser::LevelParser(AssetManager *assetManager, EntityManager *entityManager)
+LevelParser::LevelParser()
 {
-    this->assetManager = assetManager;
-    this->entityManager = entityManager;
+    mapParser = new MapParser();
 }
 
 void LevelParser::LoadLevel(std::string levelName)
@@ -32,7 +31,7 @@ void LevelParser::LoadLevel(std::string levelName)
     this->LoadAssets(lua[levelName]["assets"]);
 
     std::cout << "Loading map.." << std::endl;
-    this->LoadMap(lua[levelName]["map"]);
+    this->mapParser->Parse(lua[levelName]["map"]);
 
     std::cout << "Loading entities.." << std::endl;
     this->LoadEntities(lua[levelName]["entities"]);
@@ -64,71 +63,21 @@ void LevelParser::LoadAssets(sol::table node)
 
         if (assetType.compare("texture") == 0)
         {
-            assetManager->AddTexture(assetId, assetFilePath.c_str());
+            Game::assetManager->AddTexture(assetId, assetFilePath.c_str());
         }
         else if (assetType.compare("font") == 0)
         {
-            assetManager->AddFont(assetId, assetFilePath.c_str(), static_cast<int>(node[i]["fontSize"]));
+            Game::assetManager->AddFont(assetId, assetFilePath.c_str(), static_cast<int>(node[i]["fontSize"]));
         }
         else if (assetType.compare("sound") == 0)
         {
-            assetManager->AddSound(assetId, assetFilePath.c_str());
+            Game::assetManager->AddSound(assetId, assetFilePath.c_str());
         }
         else
         {
             std::cerr << "Could not load asset with unknown type: " << assetType << std::endl;
         }
     }
-}
-
-void LevelParser::LoadMap(sol::table node)
-{
-    // Get data from script file
-    sol::optional<sol::table> opt = node;
-
-    if (opt == sol::nullopt)
-    {
-        std::cerr << "Could not find root map node" << std::endl;
-        return;
-    }
-
-    std::string filePath = node["file"];
-    std::string textureId = node["textureAssetId"];
-    int mapSizeX = static_cast<int>(node["mapSizeX"]);
-    int mapSizeY = static_cast<int>(node["mapSizeY"]);
-    int tileSize = static_cast<int>(node["tileSize"]);
-    int scale = static_cast<int>(node["scale"]);
-
-    // Read map from file
-    std::fstream mapFile;
-    mapFile.open(filePath);
-
-    for (int y = 0; y < mapSizeY; y++)
-    {
-        for (int x = 0; x < mapSizeX; x++)
-        {
-            char ch;
-            mapFile.get(ch);
-            int sourceRectY = atoi(&ch) * tileSize;
-            mapFile.get(ch);
-            int sourceRectX = atoi(&ch) * tileSize;
-
-            Entity &newTile(entityManager->AddEntity("Tile", TILEMAP_LAYER));
-
-            newTile.AddComponent<TileComponent>(
-                sourceRectX,
-                sourceRectY,
-                x * (scale * tileSize),
-                y * (scale * tileSize),
-                tileSize,
-                scale,
-                textureId
-            );
-            
-            mapFile.ignore();
-        }
-    }
-    mapFile.close();
 }
 
 void LevelParser::LoadEntities(sol::table rootNode)
@@ -152,7 +101,7 @@ void LevelParser::LoadEntities(sol::table rootNode)
 
         sol::table node = rootNode[i];
 
-        Entity &entity(entityManager->AddEntity(node["name"], static_cast<LayerType>(node["layer"])));
+        Entity &entity(Game::entityManager->AddEntity(node["name"], static_cast<LayerType>(node["layer"])));
 
         sol::optional<sol::table> componentsNode = node["components"];
 
@@ -249,7 +198,7 @@ void LevelParser::LoadEntities(sol::table rootNode)
         {
             sol::table projectileEmitter = node["components"]["projectileEmitter"];
 
-            Entity &projectileEntity(entityManager->AddEntity("projectile", PROJECTILE_LAYER));
+            Entity &projectileEntity(Game::entityManager->AddEntity("projectile", PROJECTILE_LAYER));
             entity.AddEntity(&projectileEntity);
 
             if (entity.HasComponent<TransformComponent>())
@@ -277,14 +226,25 @@ void LevelParser::LoadEntities(sol::table rootNode)
                     entity.GetComponent<TransformComponent>()->position.x,
                     entity.GetComponent<TransformComponent>()->position.y,
                     static_cast<int>(projectileEmitter["width"]),
-                    static_cast<int>(projectileEmitter["height"])
-                );
-                
+                    static_cast<int>(projectileEmitter["height"]));
             }
             else
             {
                 std::cout << "Missing critical TransformComponent for ProjectileEmitter" << std::endl;
             }
+        }
+
+        sol::optional<sol::table> textLabelComponentNode = node["components"]["text"];
+
+        if (textLabelComponentNode != sol::nullopt)
+        {
+            sol::table textLabel = node["components"]["text"];
+            entity.AddComponent<TextLabelComponent>(
+                static_cast<int>(textLabel["position"]["x"]),
+                static_cast<int>(textLabel["position"]["y"]),
+                textLabel["value"],
+                textLabel["fontFamily"],
+                WHITE_COLOR);
         }
     }
 }

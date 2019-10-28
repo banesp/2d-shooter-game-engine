@@ -9,29 +9,31 @@
 class LevelParser;
 class AssetManager;
 
-class Level {
-    private:
-        int score = 0;
-        Entity* player = nullptr;
-        
-        static LevelParser* loader;
-        
-    public:
-        static SDL_Rect camera;
-        static AssetManager* assetManager;
-        static EntityManager* entityManager;
+class Level
+{
+private:
+    int score = 0;
+    Entity *player = nullptr;
 
-        Level();
-        ~Level();
+    static LevelParser *loader;
 
-        void Initialize();
-        void SetPlayerCamera();
-        void ProcessInput();
-        void Update(float deltaTime);
-        void Render();
-        void Destroy();
-        void HandleCameraMovement();
-        void CheckCollisions();
+public:
+/*
+    static AssetManager *assetManager;
+    static EntityManager *entityManager;
+*/
+
+    Level();
+    ~Level();
+
+    void Initialize();
+    void SetPlayerCamera();
+    void ProcessInput();
+    void Update(float deltaTime);
+    void Render();
+    void Destroy();
+    void HandleCameraMovement();
+    void CheckCollisions();
 };
 
 #endif
