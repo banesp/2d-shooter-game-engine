@@ -9,6 +9,8 @@
 #include "../Components/ColliderComponent.h"
 #include "../Components/ProjectileEmitterComponent.h"
 
+class ColliderComponent;
+
 class KeyboardControlComponent : public Component
 {
 public:
@@ -89,11 +91,16 @@ public:
                 Entity &projectile(Game::entityManager->AddEntity("projectile", PROJECTILE_LAYER));
 
                 int angle = 270;
-                if (sprite->GetCurrentAnimationName().compare("RightAnimation") == 0){
+                if (sprite->GetCurrentAnimationName().compare("RightAnimation") == 0)
+                {
                     angle = 0;
-                } else if (sprite->GetCurrentAnimationName().compare("DownAnimation") == 0) {
+                }
+                else if (sprite->GetCurrentAnimationName().compare("DownAnimation") == 0)
+                {
                     angle = 90;
-                } else if (sprite->GetCurrentAnimationName().compare("LeftAnimation") == 0) {
+                }
+                else if (sprite->GetCurrentAnimationName().compare("LeftAnimation") == 0)
+                {
                     angle = 180;
                 }
 

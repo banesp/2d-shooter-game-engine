@@ -7,7 +7,6 @@
 SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 EntityManager *Game::entityManager = new EntityManager();
 AssetManager *Game::assetManager = new AssetManager();
-
 SDL_Renderer *Game::renderer;
 SDL_Event Game::event;
 

@@ -14,13 +14,8 @@ class TileComponent;
 class MapParser
 {
 public:
-    MapParser()
-    {
-    }
-
-    ~MapParser()
-    {
-    }
+    MapParser() {}
+    ~MapParser() {}
 
     void Parse(sol::table node)
     {
