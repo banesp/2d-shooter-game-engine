@@ -1,13 +1,8 @@
-#include "../Data/LevelParser.h"
+#include "../Data/LevelLoader.h"
 #include "../Constants.h"
 #include <fstream>
 
-LevelParser::LevelParser()
-{
-    mapParser = new MapParser();
-}
-
-void LevelParser::LoadLevel(std::string levelName)
+void LevelLoader::Load(std::string levelName)
 {
     state.open_libraries(sol::lib::base, sol::lib::os, sol::lib::math);
     state.script_file("./assets/scripts/" + levelName + ".lua");

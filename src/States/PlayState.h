@@ -2,7 +2,7 @@
 #define PLAY_STATE_H
 
 #include "../States/GameState.h"
-#include "../States/GameStateMachine.h"
+#include "../States/GameStateChanger.h"
 #include "../Constants.h"
 #include "../Level.h"
 #include <SDL2/SDL.h>
@@ -12,11 +12,11 @@ class Level;
 class PlayState : public GameState
 {
 private:
-    GameStateMachine *gsm = nullptr;
+    GameStateChanger *gameStateChanger = nullptr;
     Level *level = nullptr;
 
 public:    
-    PlayState(GameStateMachine *gsm);
+    PlayState(GameStateChanger *gameStateChanger);
     virtual ~PlayState();
 
     virtual void OnEnterState();

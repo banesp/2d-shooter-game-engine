@@ -2,11 +2,11 @@
 #define LEVEL_H
 
 #include "./Engine/Entity.h"
-#include "./Data/LevelParser.h"
+#include "./Data/LevelLoader.h"
 #include "./AssetManager.h"
 #include "./EntityManager.h"
 
-class LevelParser;
+class LevelLoader;
 class AssetManager;
 
 class Level
@@ -15,7 +15,7 @@ private:
     int score = 0;
     Entity *player = nullptr;
 
-    static LevelParser *loader;
+    static LevelLoader *loader;
 
 public:
 /*

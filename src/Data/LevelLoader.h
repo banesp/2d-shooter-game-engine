@@ -14,7 +14,7 @@
 class AssetManager;
 class EntityManager;
 
-class LevelParser
+class LevelLoader
 {
 private:
     sol::state state;
@@ -24,8 +24,8 @@ private:
     EntityParser *entityParser = nullptr;
 
 public:
-    LevelParser();
-    void LoadLevel(std::string levelNumber);
+    LevelLoader() {}
+    void Load(std::string levelNumber);
 };
 
 #endif;

@@ -4,7 +4,7 @@
 #include "./Components/ColliderComponent.h"
 #include <iostream>
 
-LevelParser *Level::loader = new LevelParser();
+LevelLoader *Level::loader = new LevelLoader();
 // SDL_Rect Level::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
 Level::Level()
@@ -20,7 +20,7 @@ Level::~Level()
 
 void Level::Initialize()
 {
-    loader->LoadLevel("Level1");
+    loader->Load("Level1");
 }
 
 void Level::SetPlayerCamera()
@@ -52,7 +52,6 @@ void Level::Render()
     {
         return;
     }
-
     Game::entityManager->Render();
 }
 

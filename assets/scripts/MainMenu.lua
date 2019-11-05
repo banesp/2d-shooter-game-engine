@@ -20,7 +20,7 @@ MainMenu = {
                         y = 0
                     },
                     fontFamily = "charriot-font",
-                    value = "Choppermania"
+                    value = "ChopperMania"
                 }
             }
         }

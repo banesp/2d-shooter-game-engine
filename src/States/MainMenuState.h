@@ -15,9 +15,6 @@ private:
     GameStateChanger *gameStateChanger;
 
 public:
-//    static AssetManager *assetManager;
-//    static EntityManager *entityManager;
-
     MainMenuState(GameStateChanger *changer);
     virtual ~MainMenuState();
 

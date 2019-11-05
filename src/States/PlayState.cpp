@@ -2,9 +2,9 @@
 #include "../Constants.h"
 #include <iostream>
 
-PlayState::PlayState(GameStateMachine *gsm)
+PlayState::PlayState(GameStateChanger *gameStateChanger)
 {
-    this->gsm = gsm;
+    this->gameStateChanger = gameStateChanger;
     this->level = new Level();
     this->level->Initialize();
 }
@@ -13,7 +13,7 @@ PlayState::~PlayState()
 {
     this->level->Destroy();
     this->level = nullptr;
-    this->gsm = nullptr;
+    this->gameStateChanger = nullptr;
 }
 
 void PlayState::OnEnterState()
@@ -36,13 +36,13 @@ void PlayState::ProcessInput(SDL_Event event)
         {
         case SDLK_ESCAPE:
             std::cout << "Clicked the escape key from PlayState" << std::endl;
-            this->gsm->ChangeState(MAIN_MENU_STATE);
+            this->gameStateChanger->ChangeState(MAIN_MENU_STATE);
             break;
         default:
             level->ProcessInput();
             break;
         }
-    }    
+    }
 }
 
 void PlayState::Update(float deltaTime)

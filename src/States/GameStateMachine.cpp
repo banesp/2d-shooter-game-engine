@@ -2,8 +2,12 @@
 #include "../States/MainMenuState.h"
 #include "../States/PlayState.h"
 
+// WIP: State swapping needs some tweaking to work optimally
+// Should not initialize a new state if GSM already has that state in vector
 void GameStateMachine::ChangeState(GameStateType t)
 {
+    std::cout << "Size of states vector: " << states.size() << std::endl;
+
     if (!states.empty())
     {
         if (states.back()->GetStateID() == t)
@@ -78,7 +82,7 @@ void GameStateMachine::Destroy()
 {
     if (!states.empty())
     {
-        states.back()->OnExitState();        
+        states.back()->OnExitState();
         delete states.back();
     }
 

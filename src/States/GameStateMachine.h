@@ -17,7 +17,6 @@ public:
     ~GameStateMachine() {}
 
     void ChangeState(GameStateType t);
-
     void PushState(GameState *state);
     void PopState();
 
