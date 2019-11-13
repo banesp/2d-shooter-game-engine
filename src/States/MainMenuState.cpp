@@ -21,11 +21,11 @@ void MainMenuState::OnExitState()
 {
 }
 
-void MainMenuState::ProcessInput(SDL_Event event)
+void MainMenuState::ProcessInput(SDL_Event *event)
 {
-    if (event.type == SDL_KEYDOWN)
+    if (event->type == SDL_KEYDOWN)
     {
-        switch (event.key.keysym.sym)
+        switch (event->key.keysym.sym)
         {
         case SDLK_RETURN:
             this->gameStateChanger->ChangeState(PLAY_STATE);

@@ -1,12 +1,12 @@
 #include "../Engine/Entity.h"
 #include <iostream>
 
-Entity::Entity(EntityManager &manager) : manager(manager)
+Entity::Entity()
 {
     this->isActive = true;
 }
 
-Entity::Entity(EntityManager &manager, std::string name, LayerType layer) : manager(manager), name(name), layer(layer)
+Entity::Entity(std::string name, LayerType layer) : name(name), layer(layer)
 {
     this->isActive = true;
 }

@@ -4,18 +4,22 @@
 #include "./Components/ColliderComponent.h"
 #include <iostream>
 
-LevelLoader *Level::loader = new LevelLoader();
 // SDL_Rect Level::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
-Level::Level()
+Level::Level(AssetManager *assetManager, EntityManager *entityManager)
 {
+    this->assetManager = assetManager;
+    this->entityManager = entityManager;
     this->player = nullptr;
+    this->loader = new LevelLoader(assetManager, entityManager);
 }
 
 Level::~Level()
 {
     loader = nullptr;
     player = nullptr;
+    assetManager = nullptr;
+    entityManager = nullptr;
 }
 
 void Level::Initialize()
@@ -25,7 +29,7 @@ void Level::Initialize()
 
 void Level::SetPlayerCamera()
 {
-    for (auto &entity : Game::entityManager->GetEntities())
+    for (auto &entity : entityManager->GetEntities())
     {
         if (entity->name == "player")
         {
@@ -41,18 +45,14 @@ void Level::ProcessInput()
 
 void Level::Update(float deltaTime)
 {
-    Game::entityManager->Update(deltaTime);
-    HandleCameraMovement();
-    CheckCollisions();
+    entityManager->Update(deltaTime);
+    //HandleCameraMovement();
+    //CheckCollisions();
 }
 
 void Level::Render()
 {
-    if (Game::entityManager->HasNoEntities())
-    {
-        return;
-    }
-    Game::entityManager->Render();
+    entityManager->Render();
 }
 
 void Level::HandleCameraMovement()
@@ -63,7 +63,7 @@ void Level::HandleCameraMovement()
     }
 
     TransformComponent *mainPlayerTransform = player->GetComponent<TransformComponent>();
-
+    // TODO: This should be level instead
     Game::camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
     Game::camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
     Game::camera.x = Game::camera.x < 0 ? 0 : Game::camera.x;
@@ -74,7 +74,7 @@ void Level::HandleCameraMovement()
 
 void Level::CheckCollisions()
 {
-    std::vector<Entity *> entities = Game::entityManager->GetEntities();
+    std::vector<Entity *> entities = entityManager->GetEntities();
 
     for (int i = 0; i < entities.size() - 1; i++)
     {
@@ -142,8 +142,6 @@ void Level::CheckCollisions()
 
 void Level::Destroy()
 {
-    /*
     entityManager->ClearData();
     assetManager->ClearData();
-    */
 }

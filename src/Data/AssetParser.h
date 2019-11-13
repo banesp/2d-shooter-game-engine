@@ -3,25 +3,27 @@
 
 #include "../EntityManager.h"
 #include "../AssetManager.h"
+#include "../Data/Asset.h"
 #include "../../lib/lua/sol.hpp"
 #include <iostream>
+#include <vector>
 
 class AssetParser
 {
 public:
-    void Parse(sol::table node)
+    std::vector<Asset*> Parse(sol::table node)
     {
+        std::vector<Asset *> assets;
         sol::optional<sol::table> opt = node;
 
         if (opt == sol::nullopt)
         {
             std::cerr << "Could not find root asset node" << std::endl;
-            return;
+            return assets;
         }
 
         for (int i = 0;; i++)
         {
-
             sol::optional<sol::table> opt = node[i];
 
             if (opt == sol::nullopt)
@@ -35,21 +37,24 @@ public:
 
             if (assetType.compare("texture") == 0)
             {
-                Game::assetManager->AddTexture(assetId, assetFilePath.c_str());
+                assets.push_back(new Asset(assetType, assetId, assetFilePath.c_str()));
             }
             else if (assetType.compare("font") == 0)
             {
-                Game::assetManager->AddFont(assetId, assetFilePath.c_str(), static_cast<int>(node[i]["fontSize"]));
+                int fontSize = static_cast<int>(node[i]["fontSize"]);
+                assets.push_back(new Asset(assetType, assetId, assetFilePath.c_str(), fontSize));
             }
             else if (assetType.compare("sound") == 0)
             {
-                Game::assetManager->AddSound(assetId, assetFilePath.c_str());
+                assets.push_back(new Asset(assetType, assetId, assetFilePath.c_str()));
             }
             else
             {
                 std::cerr << "Could not load asset with unknown type: " << assetType << std::endl;
             }
         }
+
+        return assets;
     }
 };
 

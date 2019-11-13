@@ -21,7 +21,7 @@ public:
     virtual void OnEnterState();
     virtual void OnExitState();
 
-    virtual void ProcessInput(SDL_Event event);
+    virtual void ProcessInput(SDL_Event *event);
     virtual void Update(float deltaTime);
     virtual void Render();
 

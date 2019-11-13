@@ -6,25 +6,39 @@
 #include "../Components/TileComponent.h"
 #include "../../lib/glm/glm.hpp"
 #include "../../lib/lua/sol.hpp"
+#include <vector>
 #include <iostream>
 #include <fstream>
 
+class AssetManager;
+class EntityManager;
 class TileComponent;
 
 class MapParser
 {
-public:
-    MapParser() {}
-    ~MapParser() {}
+private:
+    AssetManager *assetManager;
 
-    void Parse(sol::table node)
+public:
+    MapParser(AssetManager *assetManager)
     {
+        this->assetManager = assetManager;
+    }
+
+    ~MapParser()
+    {
+        this->assetManager = nullptr;
+    }
+
+    std::vector<Entity *> Parse(sol::table node)
+    {
+        std::vector<Entity *> tiles;
         sol::optional<sol::table> opt = node;
 
         if (opt == sol::nullopt)
         {
             std::cerr << "Could not find root map node" << std::endl;
-            return;
+            return tiles;
         }
 
         std::string filePath = node["file"];
@@ -47,20 +61,19 @@ public:
                 mapFile.get(ch);
                 int sourceRectX = atoi(&ch) * tileSize;
 
-                Entity &newTile(Game::entityManager->AddEntity("Tile", TILEMAP_LAYER));
-                newTile.AddComponent<TileComponent>(
-                    sourceRectX,
-                    sourceRectY,
-                    x * (scale * tileSize),
-                    y * (scale * tileSize),
-                    tileSize,
-                    scale,
-                    Game::assetManager->GetTexture(textureId));
+                int destRectX = x * (scale * tileSize);
+                int destRectY = y * (scale * tileSize);
 
+                Entity *tile = new Entity("Tile", TILEMAP_LAYER);
+
+                tile->AddComponent<TileComponent>(sourceRectX, sourceRectY, destRectX, destRectY, tileSize, scale, assetManager->GetTexture(textureId));
+                tiles.push_back(tile);
                 mapFile.ignore();
             }
         }
         mapFile.close();
+
+        return tiles;
     }
 };
 

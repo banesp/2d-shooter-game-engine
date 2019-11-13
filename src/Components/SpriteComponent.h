@@ -27,21 +27,21 @@ private:
 public:
     SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
-    SpriteComponent(std::string id)
+    SpriteComponent(SDL_Texture *texture)
     {
-        this->isAnimated = false;
+        this->texture = texture;
         this->isFixed = false;
-        SetTexture(id);
-    }
-
-    SpriteComponent(std::string id, bool isFixed)
-    {
         this->isAnimated = false;
-        this->isFixed = isFixed;
-        SetTexture(id);
     }
 
-    SpriteComponent(std::string id, int numFrames, int animationSpeed, bool hasDirections, bool isFixed)
+    SpriteComponent(SDL_Texture *texture, bool isFixed)
+    {
+        this->texture = texture;
+        this->isFixed = isFixed;
+        this->isAnimated = false;
+    }
+
+    SpriteComponent(SDL_Texture *texture, int numFrames, int animationSpeed, bool hasDirections, bool isFixed)
     {
         this->isAnimated = true;
         this->numFrames = numFrames;
@@ -70,8 +70,7 @@ public:
         }
 
         Play(this->currentAnimationName);
-
-        SetTexture(id);
+        this->texture = texture;
     }
 
     void Play(std::string animationName)
@@ -80,12 +79,6 @@ public:
         animationIndex = animations[animationName].index;
         animationSpeed = animations[animationName].animationSpeed;
         currentAnimationName = animationName;
-    }
-
-    // TODO: Pass in the texture instead of using global stuff
-    void SetTexture(std::string assetTextureId)
-    {
-        texture = Game::assetManager->GetTexture(assetTextureId);
     }
 
     void Initialize() override
@@ -104,11 +97,8 @@ public:
             sourceRectangle.x = sourceRectangle.w * static_cast<int>((SDL_GetTicks() / animationSpeed) % numFrames);
         }
         sourceRectangle.y = animationIndex * transform->height;
-
-        // TODO: Global stuff --> Might have to move camera to game class
-        destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Game::camera.x);
-        destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y);
-
+        destinationRectangle.x = static_cast<int>(transform->position.x) - (isFixed ? 0 : Game::camera.x); // TODO: Wrong camera
+        destinationRectangle.y = static_cast<int>(transform->position.y) - (isFixed ? 0 : Game::camera.y); // TODO: Wrong camera
         destinationRectangle.w = transform->width * transform->scale;
         destinationRectangle.h = transform->height * transform->scale;
     }

@@ -22,8 +22,8 @@ private:
 
 public:
     static SDL_Rect camera;
-    static AssetManager *assetManager;
-    static EntityManager *entityManager;
+//    static AssetManager *assetManager;
+//    static EntityManager *entityManager;
     static SDL_Renderer *renderer;
     static SDL_Event event;
 

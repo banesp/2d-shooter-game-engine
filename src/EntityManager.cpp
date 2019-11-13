@@ -16,15 +16,16 @@ void EntityManager::ClearData()
 
 void EntityManager::Update(float deltaTime)
 {
+    std::cout << "EntityManager::Update Starting: " << &entities << std::endl;
     for (int i = 0; i < entities.size(); i++)
     {
         entities[i]->Update(deltaTime);
-
         if (!entities[i]->IsActive())
         {
             entities.erase(entities.begin() + i);
         }
     }
+    std::cout << "EntityManager::Update finished" << std::endl;
 }
 
 void EntityManager::DestroyInactiveEntities()
@@ -90,7 +91,7 @@ void EntityManager::ListAllEntities() const
 
 Entity &EntityManager::AddEntity(std::string entityName, LayerType layer)
 {
-    Entity *entity = new Entity(*this, entityName, layer);
+    Entity *entity = new Entity(entityName, layer);
     entities.emplace_back(entity);
     return *entity;
 }

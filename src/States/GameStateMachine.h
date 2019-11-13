@@ -20,7 +20,7 @@ public:
     void PushState(GameState *state);
     void PopState();
 
-    void ProcessInput(SDL_Event event);
+    void ProcessInput(SDL_Event *event);
     void Update(float deltaTime);
     void Render();
     void Destroy();

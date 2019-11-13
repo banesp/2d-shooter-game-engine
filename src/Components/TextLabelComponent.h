@@ -29,11 +29,12 @@ public:
 
     void SetLabelText(std::string text, std::string fontFamily)
     {
-        // TODO: Global stuff
+        /*
         SDL_Surface *surface = TTF_RenderText_Blended(Game::assetManager->GetFont(fontFamily), text.c_str(), this->color);
         this->texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
         SDL_FreeSurface(surface);
         SDL_QueryTexture(texture, NULL, NULL, &position.w, &position.h);
+        */
     }
 
     void Render() override

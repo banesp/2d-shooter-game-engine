@@ -4,9 +4,7 @@
 #include "./States/MainMenuState.h"
 #include <iostream>
 
-SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-EntityManager *Game::entityManager = new EntityManager();
-AssetManager *Game::assetManager = new AssetManager();
+SDL_Rect Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT}; // TODO: Move to level
 SDL_Renderer *Game::renderer;
 SDL_Event Game::event;
 
@@ -72,8 +70,9 @@ void Game::Initialize(int width, int height)
 
 void Game::ProcessInput()
 {
-    SDL_PollEvent(&event);
-    switch (event.type)
+    SDL_Event ev;
+    SDL_PollEvent(&ev);
+    switch (ev.type)
     {
     case SDL_QUIT:
     {
@@ -82,7 +81,7 @@ void Game::ProcessInput()
     }
     default:
     {
-        this->gameStateMachine->ProcessInput(event);
+        this->gameStateMachine->ProcessInput(&ev);
     }
     }
 }

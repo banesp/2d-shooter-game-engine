@@ -13,7 +13,7 @@ public:
     virtual void OnEnterState() = 0;
     virtual void OnExitState() = 0;
 
-    virtual void ProcessInput(SDL_Event event) = 0;
+    virtual void ProcessInput(SDL_Event *event) = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void Render() = 0;
 

@@ -8,6 +8,7 @@
 
 class LevelLoader;
 class AssetManager;
+class EntityManager;
 
 class Level
 {
@@ -15,15 +16,14 @@ private:
     int score = 0;
     Entity *player = nullptr;
 
-    static LevelLoader *loader;
+    AssetManager *assetManager;
+    EntityManager *entityManager;
+    LevelLoader *loader;
 
 public:
-/*
-    static AssetManager *assetManager;
-    static EntityManager *entityManager;
-*/
 
     Level();
+    Level(AssetManager *assetManager, EntityManager *entityManager);
     ~Level();
 
     void Initialize();

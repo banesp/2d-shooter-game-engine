@@ -4,6 +4,7 @@
 #include "../Level.h"
 #include "../Game.h"
 #include "../EntityManager.h"
+#include "../Engine/Entity.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/SpriteComponent.h"
 #include "../Components/ColliderComponent.h"
@@ -13,6 +14,9 @@ class ColliderComponent;
 
 class KeyboardControlComponent : public Component
 {
+private:
+    EntityManager *entityManager;
+
 public:
     std::string upKey;
     std::string downKey;
@@ -26,8 +30,9 @@ public:
     {
     }
 
-    KeyboardControlComponent(std::string upKey, std::string rightKey, std::string downKey, std::string leftKey, std::string shootKey)
+    KeyboardControlComponent(EntityManager *entityManager, std::string upKey, std::string rightKey, std::string downKey, std::string leftKey, std::string shootKey)
     {
+        this->entityManager = entityManager;
         this->upKey = GetSDLKeyStringCode(upKey);
         this->rightKey = GetSDLKeyStringCode(rightKey);
         this->downKey = GetSDLKeyStringCode(downKey);
@@ -60,7 +65,7 @@ public:
     {
         if (Game::event.type == SDL_KEYDOWN)
         {
-            std::string keyCode = std::to_string(Game::event.key.keysym.sym);
+            std::string keyCode = std::to_string(Game::event.key.keysym.sym); // TODO: Use singletons like this?
             if (keyCode.compare(upKey) == 0)
             {
                 transform->velocity.y = -40;
@@ -87,8 +92,13 @@ public:
             }
             if (keyCode.compare(shootKey) == 0)
             {
-                // TODO: Should read projectile data from script file
-                Entity &projectile(Game::entityManager->AddEntity("projectile", PROJECTILE_LAYER));
+/*
+                Entity *projectile = new Entity("projectile", PROJECTILE_LAYER); // TODO: Add this to entityManager for rendering
+                //&entityManager->AddEntity(projectile);
+
+                projectile->AddComponent<SpriteComponent>("projectile-texture"); // TODO: Pass in texture
+                projectile->AddComponent<TransformComponent>(transform->position.x + (transform->width / 2), transform->position.y + (transform->height / 2), 0, 0, 4, 4, 1);
+                projectile->AddComponent<ColliderComponent>("FRIENDLY_PROJECTILE", transform->position.x, transform->position.y, 4, 4);
 
                 int angle = 270;
                 if (sprite->GetCurrentAnimationName().compare("RightAnimation") == 0)
@@ -103,21 +113,8 @@ public:
                 {
                     angle = 180;
                 }
-
-                projectile.AddComponent<TransformComponent>(
-                    transform->position.x + (transform->width / 2),
-                    transform->position.y + (transform->height / 2),
-                    0,
-                    0,
-                    4,
-                    4,
-                    1);
-
-                projectile.AddComponent<SpriteComponent>("projectile-texture");
-
-                projectile.AddComponent<ProjectileEmitterComponent>(100, angle, 1000, false);
-
-                projectile.AddComponent<ColliderComponent>("FRIENDLY_PROJECTILE", transform->position.x, transform->position.y, 4, 4);
+                projectile->AddComponent<ProjectileEmitterComponent>(100, angle, 1000, false);
+*/
             }
         }
 

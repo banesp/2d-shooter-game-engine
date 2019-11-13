@@ -54,7 +54,7 @@ void GameStateMachine::PopState()
     // TODO: Resume
 }
 
-void GameStateMachine::ProcessInput(SDL_Event event)
+void GameStateMachine::ProcessInput(SDL_Event *event)
 {
     if (!states.empty())
     {

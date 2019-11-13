@@ -6,8 +6,10 @@
 
 # Unignore all dirs
 !*/
+!Makefile
 
 bin/
 lib/
+
 # assets/
 .vscode/

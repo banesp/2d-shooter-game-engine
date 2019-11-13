@@ -38,7 +38,8 @@ public:
 
     void SetTexture(std::string assetTextureId)
     {
-        this->texture = Game::assetManager->GetTexture(assetTextureId);
+        // TODO
+        //this->texture = Game::assetManager->GetTexture(assetTextureId);
     }
 
     void Initialize() override
@@ -60,7 +61,7 @@ public:
         collider.w = transform->width * transform->scale;
         collider.h = transform->height * transform->scale;
 
-        // Should pass in camera SDL_Rect instead of this
+        // TODO: Should pass in camera SDL_Rect instead of this
         destinationRectangle.x = collider.x - Game::camera.x;
         destinationRectangle.y = collider.y - Game::camera.y;
 
