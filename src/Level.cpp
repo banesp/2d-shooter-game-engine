@@ -16,15 +16,43 @@ Level::Level(AssetManager *assetManager, EntityManager *entityManager)
 
 Level::~Level()
 {
-    loader = nullptr;
-    player = nullptr;
-    assetManager = nullptr;
-    entityManager = nullptr;
+    this->loader = nullptr;
+    this->player = nullptr;
+    this->assetManager = nullptr;
+    this->entityManager = nullptr;
 }
 
 void Level::Initialize()
 {
     loader->Load("Level1");
+
+    for (auto &asset : loader->GetAssets())
+    {
+        if (asset->GetType().compare("texture") == 0)
+        {
+            this->assetManager->AddTexture(asset->GetId(), asset->GetFilePath().c_str());
+        }
+        else if (asset->GetType().compare("sound") == 0)
+        {
+            this->assetManager->AddSound(asset->GetId(), asset->GetFilePath().c_str());
+        }
+        else if (asset->GetType().compare("font") == 0)
+        {
+            this->assetManager->AddFont(asset->GetId(), asset->GetFilePath().c_str(), asset->GetFontSize());
+        }
+        else
+        {
+            std::cout << "Unknown asset type: " << asset->GetType() << std::endl;
+        }
+    }
+
+    for (auto &tile : loader->GetTiles())
+    {
+        std::cout << "Tile: " << tile->name << std::endl;
+        this->entityManager->AddEntity(tile);
+    }
+
+    // loader->GetEntities();
 }
 
 void Level::SetPlayerCamera()
@@ -63,7 +91,7 @@ void Level::HandleCameraMovement()
     }
 
     TransformComponent *mainPlayerTransform = player->GetComponent<TransformComponent>();
-    // TODO: This should be level instead
+    // TODO: This should be level camera instead
     Game::camera.x = mainPlayerTransform->position.x - (WINDOW_WIDTH / 2);
     Game::camera.y = mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
     Game::camera.x = Game::camera.x < 0 ? 0 : Game::camera.x;

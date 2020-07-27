@@ -21,21 +21,15 @@ PlayState::~PlayState()
 void PlayState::OnEnterState()
 {
     std::cout << "PlayState::OnEnterState()" << std::endl;
-    // this->level->Initialize();
 }
 
 void PlayState::OnExitState()
 {
     std::cout << "PlayState::OnExitState()" << std::endl;
-    // this->level->Destroy();
 }
 
 void PlayState::ProcessInput(SDL_Event *event)
 {
-    std::cout << "1" << std::endl;
-    std::cout << "2" << std::endl;
-    std::cout << "3" << std::endl;
-
     if (event->type == SDL_KEYDOWN)
     {
         std::cout << "Event type: " << event->type << std::endl;
@@ -54,13 +48,11 @@ void PlayState::ProcessInput(SDL_Event *event)
 
 void PlayState::Update(float deltaTime)
 {
-    std::cout << "PlayState::Update" << std::endl;
     this->level->Update(deltaTime);
 }
 
 void PlayState::Render()
 {
-    std::cout << "PlayState::Render" << std::endl;
     this->level->Render();
 }
 

@@ -13,8 +13,9 @@
 #include <vector>
 #include <iostream>
 
-class AssetManager;
-class EntityManager;
+class AssetParser;
+class MapParser;
+class EntityParser;
 
 class LevelLoader
 {

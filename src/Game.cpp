@@ -90,11 +90,13 @@ void Game::Update()
 {
     while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + FRAME_TARGET_TIME))
     {
+        //std::cout << "Ticking.." << std::endl;
     }
 
     float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
     float clampTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
     ticksLastFrame = SDL_GetTicks();
+    
     gameStateMachine->Update(clampTime);
 }
 

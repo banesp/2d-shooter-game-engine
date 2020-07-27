@@ -1,4 +1,5 @@
 #include "../Components/TileComponent.h"
+#include <iostream>
 
 TileComponent::TileComponent(int sourceRectX, int sourceRectY, int x, int y, int tileSize, int tileScale, SDL_Texture *texture)
 {

@@ -13,3 +13,7 @@ lib/
 
 # assets/
 .vscode/
+
+*.o
+
+assets/*

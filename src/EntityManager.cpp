@@ -16,7 +16,6 @@ void EntityManager::ClearData()
 
 void EntityManager::Update(float deltaTime)
 {
-    std::cout << "EntityManager::Update Starting: " << &entities << std::endl;
     for (int i = 0; i < entities.size(); i++)
     {
         entities[i]->Update(deltaTime);
@@ -25,7 +24,6 @@ void EntityManager::Update(float deltaTime)
             entities.erase(entities.begin() + i);
         }
     }
-    std::cout << "EntityManager::Update finished" << std::endl;
 }
 
 void EntityManager::DestroyInactiveEntities()
@@ -41,10 +39,13 @@ void EntityManager::DestroyInactiveEntities()
 
 void EntityManager::Render()
 {
+    std::cout << "EntityManager::Render" << std::endl;
     for (int layerNumber = 0; layerNumber < NUM_LAYERS; layerNumber++)
     {
+        std::cout << "layerNumber: " << layerNumber << std::endl;
         for (auto &entity : GetEntitiesByLayer(static_cast<LayerType>(layerNumber)))
         {
+            std::cout << "render entity" << std::endl;
             entity->Render();
         }
     }
@@ -75,6 +76,7 @@ std::vector<Entity *> EntityManager::GetEntitiesByLayer(LayerType layer) const
             selectedEntities.emplace_back(entity);
         }
     }
+    std::cout << "Length: " << selectedEntities.size() << std::endl;
     return selectedEntities;
 }
 
@@ -89,6 +91,14 @@ void EntityManager::ListAllEntities() const
     }
 }
 
+Entity &EntityManager::AddEntity(Entity *entity)
+{
+    //Entity *entity = new Entity(entityName, layer);
+    entities.emplace_back(entity);
+    return *entity;
+}
+
+// Deprecated: Not working either
 Entity &EntityManager::AddEntity(std::string entityName, LayerType layer)
 {
     Entity *entity = new Entity(entityName, layer);

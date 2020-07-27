@@ -23,6 +23,7 @@ void Entity::Render()
 {
     for (auto &component : components)
     {
+        std::cout << "Render component: " << std::endl;
         component->Render();
     }
 }

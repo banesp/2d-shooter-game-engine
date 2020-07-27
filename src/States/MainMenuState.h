@@ -5,6 +5,7 @@
 #include "../AssetManager.h"
 #include "../States/GameState.h"
 #include "../States/GameStateChanger.h"
+#include "../Data/LevelLoader.h"
 #include "../Constants.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -13,6 +14,9 @@ class MainMenuState : public GameState
 {
 private:
     GameStateChanger *gameStateChanger;
+    LevelLoader *loader;
+    AssetManager *assetManager;
+    EntityManager *entityManager;
 
 public:
     MainMenuState(GameStateChanger *changer);

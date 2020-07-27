@@ -26,6 +26,8 @@ public:
     void DestroyInactiveEntities();
     std::vector<Entity *> GetEntities() const;
     std::vector<Entity *> GetEntitiesByLayer(LayerType layer) const;
+    
+    Entity &AddEntity(Entity *entity);
     Entity &AddEntity(std::string entityName, LayerType layer);
 };
 
