@@ -19,3 +19,5 @@ lib/
 assets/*
 
 .DS_STORE
+
+.make
